@@ -2561,8 +2561,8 @@ function Authenticated(_ref) {
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
               className: "hidden space-x-8 sm:-my-px sm:ml-10 sm:flex",
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Components_NavLink__WEBPACK_IMPORTED_MODULE_3__["default"], {
-                href: route('dashboard'),
-                active: route().current('dashboard'),
+                href: route("dashboard"),
+                active: route().current("dashboard"),
                 children: "Dashboard"
               })
             })]
@@ -2592,7 +2592,7 @@ function Authenticated(_ref) {
                   })
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Components_Dropdown__WEBPACK_IMPORTED_MODULE_2__["default"].Content, {
                   children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Components_Dropdown__WEBPACK_IMPORTED_MODULE_2__["default"].Link, {
-                    href: route('logout'),
+                    href: route("logout"),
                     method: "post",
                     as: "button",
                     children: "Log Out"
@@ -2615,13 +2615,13 @@ function Authenticated(_ref) {
                 fill: "none",
                 viewBox: "0 0 24 24",
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("path", {
-                  className: !showingNavigationDropdown ? 'inline-flex' : 'hidden',
+                  className: !showingNavigationDropdown ? "inline-flex" : "hidden",
                   strokeLinecap: "round",
                   strokeLinejoin: "round",
                   strokeWidth: "2",
                   d: "M4 6h16M4 12h16M4 18h16"
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("path", {
-                  className: showingNavigationDropdown ? 'inline-flex' : 'hidden',
+                  className: showingNavigationDropdown ? "inline-flex" : "hidden",
                   strokeLinecap: "round",
                   strokeLinejoin: "round",
                   strokeWidth: "2",
@@ -2632,12 +2632,12 @@ function Authenticated(_ref) {
           })]
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
-        className: (showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden',
+        className: (showingNavigationDropdown ? "block" : "hidden") + " sm:hidden",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
           className: "pt-2 pb-3 space-y-1",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Components_ResponsiveNavLink__WEBPACK_IMPORTED_MODULE_4__["default"], {
-            href: route('dashboard'),
-            active: route().current('dashboard'),
+            href: route("dashboard"),
+            active: route().current("dashboard"),
             children: "Dashboard"
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
@@ -2655,7 +2655,7 @@ function Authenticated(_ref) {
             className: "mt-3 space-y-1",
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Components_ResponsiveNavLink__WEBPACK_IMPORTED_MODULE_4__["default"], {
               method: "post",
-              href: route('logout'),
+              href: route("logout"),
               as: "button",
               children: "Log Out"
             })
@@ -3388,16 +3388,16 @@ function Welcome(props) {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "fixed top-0 right-0 px-6 py-4 sm:block",
         children: props.auth.user ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {
-          href: route('dashboard'),
+          href: route("dashboard"),
           className: "text-sm text-gray-700 underline",
           children: "Dashboard"
         }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {
-            href: route('login'),
+            href: route("login"),
             className: "text-sm text-gray-700 underline",
-            children: "Log in"
+            children: "Sign in"
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {
-            href: route('register'),
+            href: route("register"),
             className: "ml-4 text-sm text-gray-700 underline",
             children: "Register"
           })]
@@ -3538,43 +3538,43 @@ function Welcome(props) {
                 className: "ml-12",
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
                   className: "mt-2 text-gray-600 dark:text-gray-400 text-sm",
-                  children: ["Laravel's robust library of first-party tools and libraries, such as", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  children: ["Laravel's robust library of first-party tools and libraries, such as", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://forge.laravel.com",
                     className: "underline",
                     children: "Forge"
-                  }), ",", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), ",", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://vapor.laravel.com",
                     className: "underline",
                     children: "Vapor"
-                  }), ",", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), ",", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://nova.laravel.com",
                     className: "underline",
                     children: "Nova"
-                  }), ", and", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), ", and", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://envoyer.io",
                     className: "underline",
                     children: "Envoyer"
-                  }), ' ', "help you take your projects to the next level. Pair them with powerful open source libraries like", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), " ", "help you take your projects to the next level. Pair them with powerful open source libraries like", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://laravel.com/docs/billing",
                     className: "underline",
                     children: "Cashier"
-                  }), ",", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), ",", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://laravel.com/docs/dusk",
                     className: "underline",
                     children: "Dusk"
-                  }), ",", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), ",", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://laravel.com/docs/broadcasting",
                     className: "underline",
                     children: "Echo"
-                  }), ",", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), ",", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://laravel.com/docs/horizon",
                     className: "underline",
                     children: "Horizon"
-                  }), ",", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), ",", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://laravel.com/docs/sanctum",
                     className: "underline",
                     children: "Sanctum"
-                  }), ",", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                  }), ",", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                     href: "https://laravel.com/docs/telescope",
                     className: "underline",
                     children: "Telescope"
