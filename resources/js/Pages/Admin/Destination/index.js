@@ -107,11 +107,9 @@ export default function Destination(props) {
             <Head title="Destinations" />
 
             <WrapperContent>
-                {props.flash?.message && (
-                    <AlertCard variant="success">
-                        {props.flash?.message}
-                    </AlertCard>
-                )}
+                <AlertCard isOpen={!!props.flash?.message} variant="success">
+                    {props.flash?.message}
+                </AlertCard>
 
                 <div className="p-6 bg-white border-b border-gray-200">
                     <div className="flex gap-2 justify-between items-start mb-4">

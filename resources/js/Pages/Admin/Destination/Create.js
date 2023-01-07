@@ -1,4 +1,3 @@
-import React from "react";
 import { Head, useForm } from "@inertiajs/inertia-react";
 
 import {
@@ -47,11 +46,9 @@ export default function DestinationCreatePage(props) {
             <WrapperContent>
                 <ValidationErrors errors={errors} />
 
-                {wasSuccessful && (
-                    <AlertCard variant="success">
-                        <p>Destination created successfully</p>
-                    </AlertCard>
-                )}
+                <AlertCard isOpen={wasSuccessful} variant="success">
+                    <p>Destination created successfully</p>
+                </AlertCard>
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
