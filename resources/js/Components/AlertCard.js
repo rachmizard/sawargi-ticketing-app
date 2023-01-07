@@ -1,5 +1,3 @@
-import React from "react";
-
 import { DangerIcon, InfoIcon, SuccessIcon, WarningIcon } from "./Icons";
 
 export default function AlertCard({ variant = "info", title, children }) {

@@ -1,8 +1,16 @@
-import React from "react";
+import { useState } from "react";
 import { Head, Link } from "@inertiajs/inertia-react";
 import { Inertia } from "@inertiajs/inertia";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
-import { Button, Datatable, Pagination, WrapperContent } from "@/Components";
+import {
+    AlertCard,
+    Button,
+    Datatable,
+    Modal,
+    Pagination,
+    WrapperContent,
+} from "@/Components";
 import { DestinationFilterSection } from "@/Components/Modules";
 
 import Authenticated from "@/Layouts/Authenticated";
@@ -11,6 +19,9 @@ export default function Destination(props) {
     const {
         ziggy: { query },
     } = props || {};
+
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [id, setId] = useState(null);
 
     const columnDefs = [
         {
@@ -37,13 +48,21 @@ export default function Destination(props) {
         {
             headerName: "Action",
             field: "action",
-            render: () => {
+            render: (props) => {
                 return (
                     <div className="flex gap-2">
                         <Button size="sm" colorScheme="gray" variant="outline">
                             Edit
                         </Button>
-                        <Button size="sm" colorScheme="red" variant="outline">
+                        <Button
+                            size="sm"
+                            onClick={() => {
+                                setConfirmDelete(true);
+                                setId(props.id);
+                            }}
+                            colorScheme="red"
+                            variant="outline"
+                        >
                             Delete
                         </Button>
                     </div>
@@ -65,6 +84,16 @@ export default function Destination(props) {
         );
     };
 
+    const handleDelete = () => {
+        Inertia.delete(route("admin.destinations.destroy", id), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                setConfirmDelete(false);
+            },
+        });
+    };
+
     return (
         <Authenticated
             auth={props.auth}
@@ -78,6 +107,12 @@ export default function Destination(props) {
             <Head title="Destinations" />
 
             <WrapperContent>
+                {props.flash?.message && (
+                    <AlertCard variant="success">
+                        {props.flash?.message}
+                    </AlertCard>
+                )}
+
                 <div className="p-6 bg-white border-b border-gray-200">
                     <div className="flex gap-2 justify-between items-start mb-4">
                         <DestinationFilterSection
@@ -109,6 +144,47 @@ export default function Destination(props) {
                     onChangePerPage={handleChangePerPage}
                 />
             </WrapperContent>
+
+            <Modal
+                title={
+                    <div className="flex items-center gap-2">
+                        <ExclamationCircleIcon
+                            width={28}
+                            height={28}
+                            className="text-red-500"
+                        />
+                        <p>Are you sure want to delete this data?</p>
+                    </div>
+                }
+                isOpen={confirmDelete}
+                onClose={() => {
+                    setConfirmDelete(false);
+                }}
+                footer={
+                    <div className="flex justify-end gap-2">
+                        <Button
+                            size="sm"
+                            onClick={() => {
+                                setConfirmDelete(false);
+                            }}
+                            colorScheme="red"
+                            variant="solid"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            size="sm"
+                            colorScheme="gray"
+                            variant="solid"
+                            onClick={handleDelete}
+                        >
+                            Yes, I&apos;m sure
+                        </Button>
+                    </div>
+                }
+            >
+                <p>This will erase data forever! </p>
+            </Modal>
         </Authenticated>
     );
 }

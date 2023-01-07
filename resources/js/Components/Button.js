@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Button({
     type = "submit",
     className = "",
@@ -9,6 +7,7 @@ export default function Button({
     colorScheme,
     variant = "solid",
     size = "md",
+    onClick,
 }) {
     const variants = {
         outline: {
@@ -53,7 +52,12 @@ export default function Button({
         (isDisabled ? ` ${disableClassName}` : "");
 
     return (
-        <button type={type} className={mergedClassNames} disabled={isDisabled}>
+        <button
+            type={type}
+            onClick={onClick}
+            className={mergedClassNames}
+            disabled={isDisabled}
+        >
             {children}
         </button>
     );

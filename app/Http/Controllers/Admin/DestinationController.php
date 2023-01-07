@@ -57,7 +57,7 @@ class DestinationController extends Controller
     {
         Destination::create($request->all());
 
-        Redirect::route('admin.destinations')->with('success', 'Destination created successfully');
+        Redirect::route('admin.destinations')->with('message', 'Destination created successfully');
     }
 
     /**
@@ -102,6 +102,8 @@ class DestinationController extends Controller
      */
     public function destroy(Destination $destination)
     {
-        //
+        Destination::destroy($destination->id);
+
+        Redirect::route('admin.destinations')->with('message', 'Destination deleted successfully');
     }
 }
