@@ -7,6 +7,7 @@ use App\Http\Requests\StoreDestinationRequest;
 use App\Http\Requests\UpdateDestinationRequest;
 use App\Models\Destination;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class DestinationController extends Controller
@@ -19,6 +20,8 @@ class DestinationController extends Controller
     public function index(Request $request)
     {
         $query = Destination::query();
+
+        $query->orderBy('created_at', 'desc');
 
         if ($request->has('per_page')) {
             $request->session()->put('per_page', $request->get('per_page'));
@@ -41,7 +44,7 @@ class DestinationController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Destination/Create');
     }
 
     /**
@@ -52,7 +55,9 @@ class DestinationController extends Controller
      */
     public function store(StoreDestinationRequest $request)
     {
-        //
+        Destination::create($request->all());
+
+        Redirect::route('admin.destinations')->with('success', 'Destination created successfully');
     }
 
     /**

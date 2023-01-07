@@ -28,7 +28,7 @@ export default function DestinationFilterSection({
 
     return (
         <div className="flex">
-            <div className="flex w-[50%] flex-col gap-1">
+            <div className="flex flex-1 flex-col gap-1">
                 <label className="block text-sm font-medium text-gray-700">
                     Filter by City
                 </label>

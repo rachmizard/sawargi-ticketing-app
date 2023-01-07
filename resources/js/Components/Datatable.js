@@ -25,18 +25,32 @@ export default function Datatable({
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((data) => {
-                        return (
-                            <tr key={data.id}>
-                                {columnDefs.map((column, key) => (
-                                    <td key={key} className="border px-4 py-2">
-                                        {column?.render(data) ??
-                                            data[column.field]}
-                                    </td>
-                                ))}
-                            </tr>
-                        );
-                    })}
+                    {data.length > 0 ? (
+                        data.map((data) => {
+                            return (
+                                <tr key={data.id}>
+                                    {columnDefs.map((column, key) => (
+                                        <td
+                                            key={key}
+                                            className="border px-4 py-2"
+                                        >
+                                            {column?.render(data) ??
+                                                data[column.field]}
+                                        </td>
+                                    ))}
+                                </tr>
+                            );
+                        })
+                    ) : (
+                        <tr>
+                            <td
+                                colSpan={columnDefs.length}
+                                className="px-4 py-2"
+                            >
+                                <p className="text-center">No data found</p>
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
             <div className="flex justify-between mt-4">

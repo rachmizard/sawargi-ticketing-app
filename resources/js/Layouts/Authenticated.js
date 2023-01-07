@@ -4,8 +4,9 @@ import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/inertia-react";
+import { ArrowBack } from "@/Components/Icons";
 
-export default function Authenticated({ auth, header, children }) {
+export default function Authenticated({ auth, backUrl, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
@@ -31,9 +32,12 @@ export default function Authenticated({ auth, header, children }) {
 
                                 <NavLink
                                     href={route("admin.destinations")}
-                                    active={route().current(
-                                        "admin.destinations"
-                                    )}
+                                    active={
+                                        route().current("admin.destinations") ||
+                                        route().current(
+                                            "admin.destinations.create"
+                                        )
+                                    }
                                 >
                                     Destination
                                 </NavLink>
@@ -164,7 +168,15 @@ export default function Authenticated({ auth, header, children }) {
             {header && (
                 <header className="bg-white shadow">
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {header}
+                        <div className="flex gap-3">
+                            {backUrl && (
+                                <Link href={backUrl}>
+                                    <ArrowBack />
+                                </Link>
+                            )}
+
+                            {header}
+                        </div>
                     </div>
                 </header>
             )}
