@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDestinationRequest;
 use App\Http\Requests\UpdateDestinationRequest;
 use App\Models\Destination;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DestinationController extends Controller
 {
@@ -13,9 +16,22 @@ class DestinationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Destination::query();
+
+        if ($request->has('per_page')) {
+            $request->session()->put('per_page', $request->get('per_page'));
+        }
+
+        if ($request->has('city') && $request->get('city') !== 'all') {
+            $query->byCity($request->get('city'));
+        }
+
+
+        return Inertia::render('Admin/Destination', [
+            'destinations' => $query->paginate($request->session()->get('per_page', 10))
+        ]);
     }
 
     /**

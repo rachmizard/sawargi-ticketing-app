@@ -37,4 +37,9 @@ class Destination extends Model
     {
         return $query->where('city_type', 'bandung');
     }
+
+    public function scopeByCity($query, $city)
+    {
+        return $query->where('city_type', $city);
+    }
 }

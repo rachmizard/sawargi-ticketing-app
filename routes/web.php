@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DestinationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,8 +25,21 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::prefix("admin")->middleware(['auth', 'verified', 'can:role:admin'])->as("admin.")->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Admin/Dashboard');
+    })->name('dashboard');
 
-require __DIR__.'/auth.php';
+
+    Route::resource('destinations', DestinationController::class)->names([
+        'index' => 'destinations',
+        'create' => 'destinations.create',
+        'store' => 'destinations.store',
+        'show' => 'destinations.show',
+        'edit' => 'destinations.edit',
+        'update' => 'destinations.update',
+        'destroy' => 'destinations.destroy',
+    ]);
+});
+
+require __DIR__ . '/auth.php';
