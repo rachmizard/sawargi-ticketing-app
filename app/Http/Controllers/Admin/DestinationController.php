@@ -24,7 +24,7 @@ class DestinationController extends Controller
         $query->orderBy('created_at', 'desc');
 
         if ($request->has('per_page')) {
-            $request->session()->get('per_page', $request->get('per_page'));
+            $request->session()->put('per_page', $request->get('per_page'));
         }
 
         if ($request->has('city') && $request->get('city') !== 'all') {

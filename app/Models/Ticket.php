@@ -40,21 +40,21 @@ class Ticket extends Model
 
     public function getDepartDateAttribute($value)
     {
-        return date('d-m-Y H:i', strtotime($value));
+        return date('D M Y H:i A', strtotime($value));
     }
 
     public function getArrivalDateAttribute($value)
     {
-        return date('d-m-Y H:i', strtotime($value));
+        return date('D M Y H:i A', strtotime($value));
     }
 
     public function getCreatedAtAttribute($value)
     {
-        return date('d-m-Y H:i', strtotime($value));
+        return date('D M Y H:i A', strtotime($value));
     }
 
     public function getUpdatedAtAttribute($value)
     {
-        return date('d-m-Y H:i', strtotime($value));
+        return date('D M Y H:i A', strtotime($value));
     }
 }

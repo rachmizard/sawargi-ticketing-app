@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\ShuttleController;
+use App\Http\Controllers\Admin\TicketController as AdminTicketController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -50,6 +51,16 @@ Route::prefix("admin")->middleware(['auth', 'verified', 'can:role:admin'])->as("
         'edit' => 'shuttles.edit',
         'update' => 'shuttles.update',
         'destroy' => 'shuttles.destroy',
+    ]);
+
+    Route::resource('tickets', AdminTicketController::class)->names([
+        'index' => 'tickets',
+        'create' => 'tickets.create',
+        'store' => 'tickets.store',
+        'show' => 'tickets.show',
+        'edit' => 'tickets.edit',
+        'update' => 'tickets.update',
+        'destroy' => 'tickets.destroy',
     ]);
 });
 

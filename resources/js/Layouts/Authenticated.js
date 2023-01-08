@@ -51,6 +51,16 @@ export default function Authenticated({ auth, backUrl, header, children }) {
                                 >
                                     Shuttle
                                 </NavLink>
+
+                                <NavLink
+                                    href={route("admin.tickets")}
+                                    active={
+                                        route().current("admin.tickets") ||
+                                        route().current("admin.tickets.create")
+                                    }
+                                >
+                                    Ticket
+                                </NavLink>
                             </div>
                         </div>
 
