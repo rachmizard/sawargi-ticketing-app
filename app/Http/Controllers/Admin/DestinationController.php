@@ -24,7 +24,7 @@ class DestinationController extends Controller
         $query->orderBy('created_at', 'desc');
 
         if ($request->has('per_page')) {
-            $request->session()->put('per_page', $request->get('per_page'));
+            $request->session()->get('per_page', $request->get('per_page'));
         }
 
         if ($request->has('city') && $request->get('city') !== 'all') {
@@ -57,7 +57,7 @@ class DestinationController extends Controller
     {
         Destination::create($request->all());
 
-        Redirect::route('admin.destinations')->with('message', 'Destination created successfully');
+        return Redirect::route('admin.destinations')->with('message', 'Destination created successfully');
     }
 
     /**
@@ -68,7 +68,9 @@ class DestinationController extends Controller
      */
     public function show(Destination $destination)
     {
-        //
+        return Inertia::render('Admin/Destination/Edit', [
+            'destination' => $destination
+        ]);
     }
 
     /**
@@ -91,7 +93,8 @@ class DestinationController extends Controller
      */
     public function update(UpdateDestinationRequest $request, Destination $destination)
     {
-        //
+        $destination->update($request->all());
+        return Redirect::route('admin.destinations')->with('message', 'Destination updated successfully');
     }
 
     /**

@@ -11,12 +11,12 @@ export default function Button({
 }) {
     const variants = {
         outline: {
-            blue: "text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white",
-            green: "text-green-500 border-green-500 hover:bg-green-500 hover:text-white",
-            red: "text-red-500 border-red-500 hover:bg-red-500 hover:text-white",
-            gray: "text-gray-500 border-gray-500 hover:bg-gray-500 hover:text-white",
-            black: "text-black border-black hover:bg-black hover:text-white",
-            purple: "text-purple-500 border-purple-500 hover:bg-purple-500 hover:text-white",
+            blue: "text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white",
+            green: "text-green-500 border border-green-500 hover:bg-green-500 hover:text-white",
+            red: "text-red-500 border border-red-500 hover:bg-red-500 hover:text-white",
+            gray: "text-gray-500 border border-gray-500 hover:bg-gray-500 hover:text-white",
+            black: "text-black border border-black hover:bg-black hover:text-white",
+            purple: "text-purple-500 border border-purple-500 hover:bg-purple-500 hover:text-white",
         },
         solid: {
             blue: "text-white bg-blue-500 hover:bg-blue-600",
@@ -29,7 +29,7 @@ export default function Button({
     }[variant];
 
     const baseClasses =
-        "inline-flex items-center border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150";
+        "inline-flex items-center rounded-md font-semibold text-xs uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150";
 
     const sizes = {
         sm: "text-sm px-3 py-1",

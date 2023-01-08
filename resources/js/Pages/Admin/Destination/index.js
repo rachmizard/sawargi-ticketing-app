@@ -51,9 +51,15 @@ export default function Destination(props) {
             render: (props) => {
                 return (
                     <div className="flex gap-2">
-                        <Button size="sm" colorScheme="gray" variant="outline">
-                            Edit
-                        </Button>
+                        <Link href={route("admin.destinations.show", props.id)}>
+                            <Button
+                                size="sm"
+                                colorScheme="gray"
+                                variant="outline"
+                            >
+                                Edit
+                            </Button>
+                        </Link>
                         <Button
                             size="sm"
                             onClick={() => {
@@ -75,6 +81,7 @@ export default function Destination(props) {
         Inertia.get(
             route("admin.destinations"),
             {
+                ...query,
                 per_page: value,
             },
             {

@@ -1,15 +1,19 @@
 import React from "react";
 import { Inertia } from "@inertiajs/inertia";
+import { usePage } from "@inertiajs/inertia-react";
 
 export default function DestinationFilterSection({
     values,
     onChange,
     useServerSideFilter = false,
 }) {
+    const { query: defaultQuery } = usePage().props.ziggy;
     const [filter, setFilter] = React.useState(values);
 
     const handleFilterChange = (value, name) => {
-        const queryParams = {};
+        const queryParams = {
+            ...defaultQuery,
+        };
 
         if (value) {
             queryParams[name] = value;
@@ -35,7 +39,7 @@ export default function DestinationFilterSection({
                 <select
                     className="rounded-md"
                     placeholder="Filter by City"
-                    value={filter?.city || "all"}
+                    value={values?.city || filter?.city || "all"}
                     onChange={({ target }) => {
                         handleFilterChange(target.value, "city");
                     }}

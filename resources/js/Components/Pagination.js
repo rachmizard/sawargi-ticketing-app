@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "@inertiajs/inertia-react";
 
 import Button from "./Button";
@@ -9,10 +8,10 @@ export default function Pagination({ links = [] }) {
             {links.map((link, key) => (
                 <Link
                     key={key}
+                    preserveScroll
+                    preserveState
                     disabled={!link.active}
                     href={link.url}
-                    preserveState
-                    preserveScroll
                 >
                     <Button
                         disabled={link.active}
