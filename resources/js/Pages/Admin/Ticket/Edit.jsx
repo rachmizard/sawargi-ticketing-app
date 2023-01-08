@@ -6,15 +6,17 @@ import { TicketForm } from "@/Components/Modules";
 import Authenticated from "@/Layouts/Authenticated";
 import { format } from "date-fns";
 
-export default function TicketCreatePage(props) {
+export default function TicketEditPage(props) {
+    const { ticket, flash } = props;
+
     const { errors, data, processing, wasSuccessful, reset, setData, post } =
-        useForm("CreateTicketForm", {
-            from_destination_id: "",
-            to_destination_id: "",
-            shuttle_id: "",
-            price: 0,
-            depart_date: null,
-            arrival_date: null,
+        useForm("EditTicketForm", {
+            from_destination_id: ticket.from_destination_id,
+            to_destination_id: ticket.to_destination_id,
+            shuttle_id: ticket.shuttle_id,
+            price: ticket.price,
+            depart_date: ticket.depart_date,
+            arrival_date: ticket.arrival_date,
         });
 
     const handleSubmit = (e) => {
@@ -25,7 +27,7 @@ export default function TicketCreatePage(props) {
         data.depart_date = format(data.depart_date, "yyyy-MM-dd HH:mm");
 
         // eslint-disable-next-line no-undef
-        post(route("admin.tickets.store"), {
+        post(route("admin.tickets.update", ticket.id), {
             data,
             onSuccess: () => {
                 reset();
@@ -38,7 +40,7 @@ export default function TicketCreatePage(props) {
             auth={props.auth}
             header={
                 <h2 className="inline-block font-semibold text-xl text-gray-800 leading-tight">
-                    Create Ticket
+                    Edit Ticket
                 </h2>
             }
             // eslint-disable-next-line no-undef
@@ -50,7 +52,7 @@ export default function TicketCreatePage(props) {
                 <ValidationErrors errors={errors} />
 
                 <AlertCard isOpen={wasSuccessful} variant="success">
-                    <p>Ticket created successfully</p>
+                    <p>{flash?.success}</p>
                 </AlertCard>
 
                 <TicketForm
@@ -58,6 +60,7 @@ export default function TicketCreatePage(props) {
                     setData={setData}
                     onSubmit={handleSubmit}
                     processing={processing}
+                    buttonSubmitLabel="Update"
                 />
             </WrapperContent>
         </Authenticated>

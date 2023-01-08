@@ -38,24 +38,4 @@ class Ticket extends Model
     {
         return $this->hasMany(Passenger::class);
     }
-
-    public function getDepartDateAttribute($value)
-    {
-        return date('D M Y H:i A', strtotime($value));
-    }
-
-    public function getArrivalDateAttribute($value)
-    {
-        return date('D M Y H:i A', strtotime($value));
-    }
-
-    public function getCreatedAtAttribute($value)
-    {
-        return date('D M Y H:i A', strtotime($value));
-    }
-
-    public function getUpdatedAtAttribute($value)
-    {
-        return date('D M Y H:i A', strtotime($value));
-    }
 }

@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Ticket\StoreTicketRequest;
+
 use App\Models\Destination;
 use App\Models\Shuttle;
+
 use App\Services\Admin\TicketService;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class TicketController extends Controller
@@ -57,9 +58,14 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, TicketService $ticket)
     {
-        //
+        $ticket = $ticket->with(['shuttle:number_plate,id', 'fromDestination:name,name,city_type,id', 'toDestination:name,city_type,id'])->find($id);
+
+        $shuttles = Shuttle::all();
+        $destinations = Destination::all();
+
+        return Inertia::render('Admin/Ticket/Edit', ['ticket' => $ticket, 'shuttles' => $shuttles, 'destinations' => $destinations]);
     }
 
     /**

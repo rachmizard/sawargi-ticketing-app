@@ -1,16 +1,32 @@
+import { forwardRef, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 
 import { Button, Input, Select } from "@/Components";
-import { forwardRef, useState } from "react";
 import { usePage } from "@inertiajs/inertia-react";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 
-export default function TicketForm({ onSubmit, data, setData, processing }) {
-    const { destinations, shuttles } = usePage().props;
+export default function TicketForm({
+    onSubmit,
+    data,
+    setData,
+    processing,
+    buttonSubmitLabel = "Submit",
+}) {
+    const { destinations, ticket, shuttles } = usePage().props;
 
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [departCity, setDepartCity] = useState(null);
+
+    const initialStartDate = !data?.depart_date
+        ? new Date()
+        : parse(data.depart_date, "yyyy-MM-dd HH:mm:ss", new Date());
+
+    const initialEnddate = !data?.arrival_date
+        ? new Date()
+        : parse(data.arrival_date, "yyyy-MM-dd HH:mm:ss", new Date());
+
+    const initialDepartCity = ticket?.from_destination?.city_type ?? null;
 
     const destinationOptions = destinations.map((destination) => ({
         value: destination.id,
@@ -31,7 +47,7 @@ export default function TicketForm({ onSubmit, data, setData, processing }) {
         }))
         .filter(
             (destination) =>
-                departCity &&
+                (departCity || initialDepartCity) &&
                 destination.city_type?.toLowerCase() !==
                     departCity?.toLowerCase()
         );
@@ -119,13 +135,13 @@ export default function TicketForm({ onSubmit, data, setData, processing }) {
                     </label>
                     <ReactDatePicker
                         id="depart_date"
-                        selected={startDate}
+                        selected={startDate ?? initialStartDate}
                         onChange={(date) => {
                             setStartDate(date);
                             setData("depart_date", date);
                         }}
-                        startDate={startDate}
-                        endDate={endDate}
+                        startDate={startDate ?? initialStartDate}
+                        endDate={endDate ?? initialEnddate}
                         selectsStart
                         nextMonthButtonLabel=">"
                         minDate={new Date()}
@@ -145,15 +161,15 @@ export default function TicketForm({ onSubmit, data, setData, processing }) {
 
                     <ReactDatePicker
                         id="arrival_date"
-                        selected={endDate}
+                        selected={endDate ?? initialEnddate}
                         onChange={(date) => {
                             setEndDate(date);
                             setData("arrival_date", date);
                         }}
                         selectsStart
-                        startDate={startDate}
-                        endDate={endDate}
-                        minDate={startDate}
+                        startDate={startDate ?? initialStartDate}
+                        endDate={endDate ?? initialEnddate}
+                        minDate={startDate ?? initialStartDate}
                         nextMonthButtonLabel=">"
                         previousMonthButtonLabel="<"
                         customInput={<ButtonInput />}
@@ -192,7 +208,7 @@ export default function TicketForm({ onSubmit, data, setData, processing }) {
                     variant="outline"
                     size="md"
                 >
-                    Create
+                    {buttonSubmitLabel}
                 </Button>
             </div>
         </form>
