@@ -19,7 +19,7 @@
         "react"
     ],
     "rules": {
-        "no-undef": "off",
+        "no-undef": "error",
         "react/prop-types": "off"
     }
 }

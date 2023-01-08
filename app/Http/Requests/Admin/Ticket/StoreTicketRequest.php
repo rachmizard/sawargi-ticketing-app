@@ -28,7 +28,7 @@ class StoreTicketRequest extends FormRequest
             'from_destination_id' => 'required|exists:destinations,id',
             'to_destination_id' => 'required|exists:destinations,id',
             'shuttle_id' => 'required|exists:shuttles,id',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:1000',
             'depart_date' => 'required|date',
             'arrival_date' => 'required|date',
         ];
