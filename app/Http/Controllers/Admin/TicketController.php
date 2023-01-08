@@ -6,10 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Ticket\StoreTicketRequest;
 use App\Models\Destination;
 use App\Models\Shuttle;
-use App\Models\Ticket;
+use App\Services\Admin\TicketService;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class TicketController extends Controller
@@ -19,20 +18,10 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, TicketService $ticket)
     {
-        $query = Ticket::query();
-
-        $query->orderBy('created_at', 'desc');
-
-        if ($request->has('per_page')) {
-            $request->session()->put('per_page', $request->get('per_page'));
-        }
-
-        $query->with(['shuttle', 'fromDestination', 'toDestination']);
-
         return Inertia::render('Admin/Ticket', [
-            'tickets' => $query->paginate($request->session()->get('per_page', 10))
+            'tickets' => $ticket->all($request),
         ]);
     }
 
@@ -56,34 +45,9 @@ class TicketController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTicketRequest $request)
+    public function store(StoreTicketRequest $request, TicketService $ticket)
     {
-        try {
-            DB::beginTransaction();
-
-            $ticket = Ticket::create($request->validated());
-
-            // check if shuttle is available
-            if ($ticket->shuttle->status != 'available') {
-                return Redirect::route("admin.tickets.create")->with("error", "Shuttle is already picked with another schedule.");
-            }
-
-            // create shuttle job
-            $ticket->shuttle->shuttleJobs()->create([
-                'ticket_id' => $ticket->id,
-                'shuttle_id' => $ticket->shuttle_id,
-                'status' => 'pending',
-            ]);
-
-            $ticket->shuttle()->update(['status' => 'unavailable']);
-
-            DB::commit();
-
-            return Redirect::route("admin.tickets")->with("message", "Ticket created successfully.");
-        } catch (\Exception $th) {
-            DB::rollBack();
-            return Redirect::route("admin.tickets.create")->with("error", "Something went wrong.");
-        }
+        return $ticket->create($request->validated());
     }
 
     /**

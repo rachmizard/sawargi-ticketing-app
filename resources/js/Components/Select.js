@@ -5,6 +5,7 @@ export default function Select({
     onChange,
     className,
     emptyOptionLabel = "Select",
+    emptyOption = false,
     ...props
 }) {
     return (
@@ -20,7 +21,7 @@ export default function Select({
                 onChange?.(e.target.value, options[e.target.selectedIndex - 1]);
             }}
         >
-            <option>{emptyOptionLabel}</option>
+            {emptyOption && <option>{emptyOptionLabel}</option>}
             {options.map((option, key) => (
                 <option key={key} value={option.value}>
                     {option.label}
