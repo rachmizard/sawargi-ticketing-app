@@ -4,30 +4,26 @@ import { AlertCard, ValidationErrors, WrapperContent } from "@/Components";
 import { TicketForm } from "@/Components/Modules";
 
 import Authenticated from "@/Layouts/Authenticated";
-import { format } from "date-fns";
 
 export default function TicketEditPage(props) {
     const { ticket, flash } = props;
 
-    const { errors, data, processing, wasSuccessful, reset, setData, post } =
-        useForm("EditTicketForm", {
-            from_destination_id: ticket.from_destination_id,
-            to_destination_id: ticket.to_destination_id,
-            shuttle_id: ticket.shuttle_id,
-            price: ticket.price,
-            depart_date: ticket.depart_date,
-            arrival_date: ticket.arrival_date,
-        });
+    const { errors, data, processing, reset, setData, put } = useForm({
+        from_destination_id: ticket.from_destination_id,
+        to_destination_id: ticket.to_destination_id,
+        shuttle_id: ticket.shuttle_id,
+        price: ticket.price,
+        depart_date: ticket.depart_date,
+        arrival_date: ticket.arrival_date,
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         data.price = parseInt(data.price);
-        data.arrival_date = format(data.arrival_date, "yyyy-MM-dd HH:mm");
-        data.depart_date = format(data.depart_date, "yyyy-MM-dd HH:mm");
 
         // eslint-disable-next-line no-undef
-        post(route("admin.tickets.update", ticket.id), {
+        put(route("admin.tickets.update", ticket.id), {
             data,
             onSuccess: () => {
                 reset();
@@ -51,8 +47,12 @@ export default function TicketEditPage(props) {
             <WrapperContent>
                 <ValidationErrors errors={errors} />
 
-                <AlertCard isOpen={wasSuccessful} variant="success">
+                <AlertCard isOpen={!!flash?.success} variant="success">
                     <p>{flash?.success}</p>
+                </AlertCard>
+
+                <AlertCard isOpen={!!flash?.error} variant="danger">
+                    <p>{flash?.error}</p>
                 </AlertCard>
 
                 <TicketForm

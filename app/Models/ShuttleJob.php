@@ -40,6 +40,11 @@ class ShuttleJob extends Model
         return $query->where('status', 'done');
     }
 
+    public function scopeCancelled($query)
+    {
+        return $query->where('status', 'cancelled');
+    }
+
     public function scopeByShuttle($query, $shuttle_id)
     {
         return $query->where('shuttle_id', $shuttle_id);

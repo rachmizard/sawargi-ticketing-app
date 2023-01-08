@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Ticket\StoreTicketRequest;
-
+use App\Http\Requests\Admin\Ticket\UpdateTicketRequest;
 use App\Models\Destination;
 use App\Models\Shuttle;
 
@@ -86,9 +86,9 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateTicketRequest $request, $id, TicketService $ticket)
     {
-        //
+        return $ticket->update($request->validated(), $id);
     }
 
     /**

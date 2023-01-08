@@ -85,6 +85,52 @@ class TicketService implements TicketRepository
 
     public function update($data, $id)
     {
+        try {
+            DB::beginTransaction();
+
+            $ticket = $this->model::find($id);
+
+            $newShuttleId = intval($data['shuttle_id']);
+
+            // 1.1 if shuttle is changed
+            if ($ticket->shuttle_id != $newShuttleId) {
+
+                // 1.1.1 check if specified shuttle is available
+                $shuttle = $ticket->shuttle->find($newShuttleId);
+
+                if ($shuttle->status != 'available') {
+                    DB::rollBack();
+
+                    return Redirect::route("admin.tickets.show", $id)->with("error", "Shuttle " . $shuttle->number_plate . " is already picked with another schedule.");
+                }
+
+                // 1.1.2 set previous shuttle status to available
+                $ticket->shuttle()->update(['status' => 'available']);
+
+                // 1.1.3 set shuttle job to cancelled
+                $ticket->shuttle->shuttleJobs()->update(['status' => 'cancelled']);
+
+                // 1.1.4 create shuttle job for new shuttle
+                $shuttle->shuttleJobs()->create([
+                    'ticket_id' => $ticket->id,
+                    'shuttle_id' => $shuttle->id,
+                    'status' => 'pending',
+                ]);
+
+                // 1.1.5 set new shuttle status to unavailable
+                $shuttle->update(['status' => 'unavailable']);
+            }
+
+            // 2. update ticket
+            $ticket->update($data);
+
+            DB::commit();
+
+            return Redirect::route("admin.tickets")->with("success", "Ticket updated successfully.");
+        } catch (\Exception $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     public function delete($id)
@@ -95,9 +141,6 @@ class TicketService implements TicketRepository
             // 1. set back shuttle status to available
             $ticket = $this->model::find($id);
             $ticket->shuttle()->update(['status' => 'available']);
-
-            // 2. for placeholder it will change status to done
-            $ticket->shuttle->shuttleJobs()->update(['status' => 'done']);
 
             // 3. final delete ticket
             $this->model::destroy($id);

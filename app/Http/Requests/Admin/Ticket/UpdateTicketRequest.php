@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\Ticket;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateTicketRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UpdateTicketRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -24,7 +25,12 @@ class UpdateTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'from_destination_id' => 'required|exists:destinations,id',
+            'to_destination_id' => 'required|exists:destinations,id',
+            'shuttle_id' => 'required|exists:shuttles,id',
+            'price' => 'required|numeric|min:1000',
+            'depart_date' => 'required|date',
+            'arrival_date' => 'required|date',
         ];
     }
 }
