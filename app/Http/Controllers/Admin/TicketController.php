@@ -9,6 +9,7 @@ use App\Models\Shuttle;
 use App\Services\Admin\TicketService;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class TicketController extends Controller
@@ -90,8 +91,8 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, TicketService $ticket)
     {
-        //
+        return $ticket->delete($id);
     }
 }

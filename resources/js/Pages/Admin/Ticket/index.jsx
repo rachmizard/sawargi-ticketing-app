@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useState } from "react";
 import { Head, Link } from "@inertiajs/inertia-react";
 import { Inertia } from "@inertiajs/inertia";
@@ -18,8 +19,6 @@ export default function Ticket(props) {
     const {
         ziggy: { query },
     } = props || {};
-
-    console.log(props);
 
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [id, setId] = useState(null);
@@ -143,8 +142,12 @@ export default function Ticket(props) {
             <Head title="Ticket" />
 
             <WrapperContent>
-                <AlertCard isOpen={!!props.flash?.message} variant="success">
-                    {props.flash?.message}
+                <AlertCard isOpen={!!props.flash?.success} variant="success">
+                    {props.flash?.success}
+                </AlertCard>
+
+                <AlertCard isOpen={!!props.flash?.error} variant="danger">
+                    {props.flash?.error}
                 </AlertCard>
 
                 <div className="p-6 bg-white border-b border-gray-200">
