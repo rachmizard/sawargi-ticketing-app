@@ -86,5 +86,6 @@ class TicketService implements TicketRepository
 
     public function delete($id)
     {
+        return $this->model::destroy($id);
     }
 }
