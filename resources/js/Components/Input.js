@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export default function Input({
     type = "text",
@@ -22,6 +22,7 @@ export default function Input({
     return (
         <div className="flex flex-col items-start">
             <input
+                {...props}
                 type={type}
                 name={name}
                 value={value}
@@ -33,7 +34,6 @@ export default function Input({
                 autoComplete={autoComplete}
                 required={required}
                 onChange={(e) => handleChange(e)}
-                {...props}
             />
         </div>
     );

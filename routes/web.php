@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DestinationController;
+use App\Http\Controllers\Admin\ShuttleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,6 +40,16 @@ Route::prefix("admin")->middleware(['auth', 'verified', 'can:role:admin'])->as("
         'edit' => 'destinations.edit',
         'update' => 'destinations.update',
         'destroy' => 'destinations.destroy',
+    ]);
+
+    Route::resource('shuttles', ShuttleController::class)->names([
+        'index' => 'shuttles',
+        'create' => 'shuttles.create',
+        'store' => 'shuttles.store',
+        'show' => 'shuttles.show',
+        'edit' => 'shuttles.edit',
+        'update' => 'shuttles.update',
+        'destroy' => 'shuttles.destroy',
     ]);
 });
 

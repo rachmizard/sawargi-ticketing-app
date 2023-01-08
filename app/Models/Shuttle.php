@@ -25,9 +25,9 @@ class Shuttle extends Model
         return $query->where('status', 'available');
     }
 
-    public function scopeNotAvailable($query)
+    public function scopeUnavailable($query)
     {
-        return $query->where('status', 'not available');
+        return $query->where('status', 'unavailable');
     }
 
     public function scopeByStatus($query, $status)

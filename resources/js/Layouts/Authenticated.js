@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
@@ -40,6 +40,16 @@ export default function Authenticated({ auth, backUrl, header, children }) {
                                     }
                                 >
                                     Destination
+                                </NavLink>
+
+                                <NavLink
+                                    href={route("admin.shuttles")}
+                                    active={
+                                        route().current("admin.shuttles") ||
+                                        route().current("admin.shuttles.create")
+                                    }
+                                >
+                                    Shuttle
                                 </NavLink>
                             </div>
                         </div>

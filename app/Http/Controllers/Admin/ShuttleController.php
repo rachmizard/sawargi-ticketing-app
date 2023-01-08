@@ -1,10 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreShuttleRequest;
 use App\Http\Requests\UpdateShuttleRequest;
 use App\Models\Shuttle;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class ShuttleController extends Controller
 {
@@ -13,9 +18,19 @@ class ShuttleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Shuttle::query();
+
+        $query->orderBy('created_at', 'desc');
+
+        if ($request->has('per_page')) {
+            $request->session()->put('per_page', $request->get('per_page'));
+        }
+
+        return Inertia::render('Admin/Shuttle', [
+            'shuttles' => $query->paginate($request->session()->get('per_page', 10))
+        ]);
     }
 
     /**
@@ -25,7 +40,7 @@ class ShuttleController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Shuttle/Create');
     }
 
     /**
@@ -36,7 +51,8 @@ class ShuttleController extends Controller
      */
     public function store(StoreShuttleRequest $request)
     {
-        //
+        Shuttle::create($request->validated());
+        return Redirect::route('admin.shuttles')->with('message', 'Shuttle created successfully.');
     }
 
     /**
@@ -47,18 +63,9 @@ class ShuttleController extends Controller
      */
     public function show(Shuttle $shuttle)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Shuttle  $shuttle
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Shuttle $shuttle)
-    {
-        //
+        return Inertia::render('Admin/Shuttle/Edit', [
+            'shuttle' => $shuttle
+        ]);
     }
 
     /**
@@ -70,7 +77,8 @@ class ShuttleController extends Controller
      */
     public function update(UpdateShuttleRequest $request, Shuttle $shuttle)
     {
-        //
+        $shuttle->update($request->validated());
+        return Redirect::route('admin.shuttles')->with('message', 'Shuttle updated successfully.');
     }
 
     /**
@@ -81,6 +89,7 @@ class ShuttleController extends Controller
      */
     public function destroy(Shuttle $shuttle)
     {
-        //
+        $shuttle->delete();
+        return Redirect::route('admin.shuttles')->with('message', 'Shuttle deleted successfully.');
     }
 }

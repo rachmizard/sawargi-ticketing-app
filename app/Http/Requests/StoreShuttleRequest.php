@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreShuttleRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreShuttleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -24,7 +25,9 @@ class StoreShuttleRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'number_plate' => 'required|string|max:255',
+            'capacity' => 'required|integer',
+            'status' => 'in:available,unavailable|required|string|max:255',
         ];
     }
 }

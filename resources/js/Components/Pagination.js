@@ -10,11 +10,11 @@ export default function Pagination({ links = [] }) {
                     key={key}
                     preserveScroll
                     preserveState
-                    disabled={!link.active}
+                    disabled={!link.url}
                     href={link.url}
                 >
                     <Button
-                        disabled={link.active}
+                        disabled={link.active || !link.url}
                         variant="outline"
                         colorScheme="gray"
                     >
