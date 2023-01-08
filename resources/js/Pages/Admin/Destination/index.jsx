@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useState } from "react";
 import { Head, Link } from "@inertiajs/inertia-react";
 import { Inertia } from "@inertiajs/inertia";

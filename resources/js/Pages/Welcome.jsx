@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, Head } from "@inertiajs/inertia-react";
+/* eslint-disable no-undef */
+import { Head, Link } from "@inertiajs/inertia-react";
 
 export default function Welcome(props) {
     return (
