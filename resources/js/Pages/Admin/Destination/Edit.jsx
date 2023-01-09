@@ -9,17 +9,20 @@ import Authenticated from "@/Layouts/Authenticated";
 export default function DestinationCreatePage(props) {
     const { auth, destination, flash } = props;
 
-    const { errors, data, processing, wasSuccessful, reset, setData, post } =
-        useForm("EditDestinationForm", {
+    console.log(flash);
+    const { errors, data, processing, reset, setData, put } = useForm(
+        "EditDestinationForm",
+        {
             from_outlet_id: destination.from_outlet_id,
             to_outlet_id: destination.to_outlet_id,
             shuttle_id: destination.shuttle_id,
-        });
+        }
+    );
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        post(route("admin.destinations.update", destination.id), {
+        put(route("admin.destinations.update", destination.id), {
             data,
             onSuccess: () => {
                 reset();
@@ -42,10 +45,7 @@ export default function DestinationCreatePage(props) {
             <WrapperContent>
                 <ValidationErrors errors={errors} />
 
-                <AlertCard
-                    isOpen={wasSuccessful || !!flash?.success}
-                    variant="success"
-                >
+                <AlertCard isOpen={!!flash?.success} variant="success">
                     <p>{flash?.success}</p>
                 </AlertCard>
 

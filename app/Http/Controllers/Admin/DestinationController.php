@@ -49,9 +49,7 @@ class DestinationController extends Controller
      */
     public function store(StoreDestinationRequest $request, DestinationService $destination)
     {
-        $destination->create($request->validated());
-
-        return Redirect::route('admin.destinations')->with('message', 'Destination created successfully');
+        return $destination->create($request->validated());
     }
 
     /**
@@ -62,8 +60,14 @@ class DestinationController extends Controller
      */
     public function show($id, DestinationService $destinationService)
     {
+
+        $outlets = Outlet::all();
+        $shuttles = Shuttle::all();
+
         return Inertia::render('Admin/Destination/Edit', [
-            'destination' => $destinationService->find($id)
+            'destination' => $destinationService->with(['fromOutlet:id,city'])->find($id),
+            'outlets' => $outlets,
+            'shuttles' => $shuttles
         ]);
     }
 
@@ -87,8 +91,7 @@ class DestinationController extends Controller
      */
     public function update(UpdateDestinationRequest $request, $id, DestinationService $destinationService)
     {
-        $destinationService->update($request->validated(), $id);
-        return Redirect::route('admin.destinations')->with('message', 'Destination updated successfully');
+        return $destinationService->update($request->validated(), $id);
     }
 
     /**

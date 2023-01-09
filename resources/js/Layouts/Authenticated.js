@@ -6,6 +6,13 @@ import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/inertia-react";
 import { ArrowBack } from "@/Components/Icons";
+import {
+    ArrowTrendingUpIcon,
+    BuildingStorefrontIcon,
+    CalendarDaysIcon,
+    Squares2X2Icon,
+    TruckIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Authenticated({ auth, backUrl, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -24,6 +31,7 @@ export default function Authenticated({ auth, backUrl, header, children }) {
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink
                                     href={route("admin.dashboard")}
+                                    icon={<Squares2X2Icon width={18} />}
                                     active={route().current("admin.dashboard")}
                                 >
                                     Dashboard
@@ -31,6 +39,7 @@ export default function Authenticated({ auth, backUrl, header, children }) {
 
                                 <NavLink
                                     href={route("admin.outlets")}
+                                    icon={<BuildingStorefrontIcon width={18} />}
                                     active={
                                         route().current("admin.outlets") ||
                                         route().current("admin.outlets.create")
@@ -41,6 +50,7 @@ export default function Authenticated({ auth, backUrl, header, children }) {
 
                                 <NavLink
                                     href={route("admin.destinations")}
+                                    icon={<ArrowTrendingUpIcon width={18} />}
                                     active={
                                         route().current("admin.destinations") ||
                                         route().current(
@@ -53,6 +63,7 @@ export default function Authenticated({ auth, backUrl, header, children }) {
 
                                 <NavLink
                                     href={route("admin.shuttles")}
+                                    icon={<TruckIcon width={18} />}
                                     active={
                                         route().current("admin.shuttles") ||
                                         route().current("admin.shuttles.create")
@@ -61,14 +72,18 @@ export default function Authenticated({ auth, backUrl, header, children }) {
                                     Shuttle
                                 </NavLink>
 
+                                {/**
+                                 * TODO: Refactor to schedule
+                                 */}
                                 <NavLink
                                     href={route("admin.tickets")}
+                                    icon={<CalendarDaysIcon width={18} />}
                                     active={
                                         route().current("admin.tickets") ||
                                         route().current("admin.tickets.create")
                                     }
                                 >
-                                    Ticket
+                                    Schedules
                                 </NavLink>
                             </div>
                         </div>

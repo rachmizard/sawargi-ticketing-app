@@ -3,8 +3,10 @@
 namespace App\Services\Admin;
 
 use App\Models\Destination;
+use App\Models\Shuttle;
 use App\Repositories\Admin\DestinationRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class DestinationService implements DestinationRepository
 {
@@ -14,7 +16,7 @@ class DestinationService implements DestinationRepository
 
     public function all(Request $request)
     {
-        $query = $this->query();
+        $query = $this->with(['shuttle:id,number_plate', 'fromOutlet:id,name', 'toOutlet:id,name']);
 
         $query->orderBy('created_at', 'desc');
 
@@ -26,12 +28,21 @@ class DestinationService implements DestinationRepository
             $query->byCity($request->get('city'));
         }
 
+
         return $query->paginate($request->session()->get('per_page', 10));
     }
 
     public function create($data)
     {
-        return $this->model::create($data);
+        $shuttle = Shuttle::find($data['shuttle_id']);
+
+        if ($shuttle->status !== 'available') {
+            return redirect()->back()->with('error', 'Shuttle is not available');
+        }
+
+        $this->model::create($data);
+
+        return redirect()->route("admin.destinations")->with('success', 'Destination created successfully');
     }
 
     public function query()
@@ -46,7 +57,28 @@ class DestinationService implements DestinationRepository
 
     public function update($data, $id)
     {
-        return $this->find($id)->update($data);
+        $destination = $this->with('shuttle:id,status')->find($id);
+
+        // check if shuttle is changed
+        if ($destination->shuttle_id !== intval($data['shuttle_id'])) {
+            // update new shuttle status to unavailable
+            $newShuttle = Shuttle::find($data['shuttle_id']);
+
+            // check new shuttle is not available
+            if ($newShuttle->status !== 'available') {
+                return Redirect::back()->with('error', 'Shuttle is not available');
+            }
+
+            $newShuttle->update(['status' => 'unavailable']);
+
+            $oldShuttle = $destination->shuttle;
+            // update old shuttle status to available
+            $oldShuttle->update(['status' => 'available']);
+        }
+
+        $destination->update($data);
+
+        return Redirect::route("admin.destinations")->with('success', 'Destination updated successfully');
     }
 
     public function delete($id)
