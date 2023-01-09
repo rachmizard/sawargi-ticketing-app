@@ -17,13 +17,17 @@ class RoleCheck
      */
     public function handle(Request $request, Closure $next, ...$role)
     {
+
+        if (!Auth::check()) {
+            return $next($request);
+        }
+
         foreach ($role as $r) {
             if (Auth::user()->role == $r) {
                 return $next($request);
             }
         }
 
-        abort(403, 'Unauthorized Access.');
 
         return $next($request);
     }
