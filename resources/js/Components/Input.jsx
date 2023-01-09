@@ -1,28 +1,33 @@
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect } from "react";
 
-export default function Input({
-    type = "text",
-    name,
-    value,
-    className,
-    autoComplete,
-    required,
-    isFocused,
-    handleChange,
-    ...props
-}) {
-    const input = useRef();
-
+const Input = forwardRef(function Input(
+    {
+        type = "text",
+        name,
+        value,
+        className,
+        autoComplete,
+        required,
+        isFocused,
+        handleChange,
+        onClick,
+        ...props
+    },
+    ref
+) {
     useEffect(() => {
         if (isFocused) {
-            input.current.focus();
+            ref?.current?.focus();
         }
-    }, []);
+
+        return () => {
+            ref?.current?.blur();
+        };
+    }, [isFocused]);
 
     return (
         <div className="flex flex-col items-start">
             <input
-                {...props}
                 type={type}
                 name={name}
                 value={value}
@@ -30,11 +35,17 @@ export default function Input({
                     `border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm ` +
                     className
                 }
-                ref={input}
+                ref={ref}
                 autoComplete={autoComplete}
                 required={required}
                 onChange={(e) => handleChange(e)}
+                onClick={onClick}
+                {...props}
             />
         </div>
     );
-}
+});
+
+Input.displayName = "Input";
+
+export default Input;
