@@ -21,8 +21,14 @@ export default function TicketCreatePage(props) {
         e.preventDefault();
 
         data.price = parseInt(data.price);
-        data.arrival_date = format(data.arrival_date, "yyyy-MM-dd HH:mm");
-        data.depart_date = format(data.depart_date, "yyyy-MM-dd HH:mm");
+
+        if (data.depart_date === null || data.arrival_date === null) {
+            data.depart_date = null;
+            data.arrival_date = null;
+        } else {
+            data.arrival_date = format(data.arrival_date, "yyyy-MM-dd HH:mm");
+            data.depart_date = format(data.depart_date, "yyyy-MM-dd HH:mm");
+        }
 
         // eslint-disable-next-line no-undef
         post(route("admin.tickets.store"), {
