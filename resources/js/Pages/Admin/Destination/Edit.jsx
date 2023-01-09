@@ -1,40 +1,35 @@
+/* eslint-disable no-undef */
 import { Head, useForm } from "@inertiajs/inertia-react";
 
-import {
-    AlertCard,
-    Button,
-    Input,
-    Select,
-    ValidationErrors,
-    WrapperContent,
-} from "@/Components";
+import { AlertCard, ValidationErrors, WrapperContent } from "@/Components";
+import { DestinationForm } from "@/Components/Modules";
 
 import Authenticated from "@/Layouts/Authenticated";
 
-import { CITY_OPTIONS_WITHOUT_ALL } from "@/Utils/constants";
+export default function DestinationCreatePage(props) {
+    const { auth, destination, flash } = props;
 
-export default function DestinationEditPage(props) {
-    const { destination, flash } = props;
-
-    const { errors, data, processing, wasSuccessful, setData, put } = useForm(
-        "UpdateDestinationForm",
-        {
-            name: destination.name,
-            city_type: destination.city_type.toLowerCase(),
-        }
-    );
+    const { errors, data, processing, wasSuccessful, reset, setData, post } =
+        useForm("EditDestinationForm", {
+            from_outlet_id: destination.from_outlet_id,
+            to_outlet_id: destination.to_outlet_id,
+            shuttle_id: destination.shuttle_id,
+        });
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        put(route("admin.destinations.update", destination?.id), {
+        post(route("admin.destinations.update", destination.id), {
             data,
+            onSuccess: () => {
+                reset();
+            },
         });
     };
 
     return (
         <Authenticated
-            auth={props.auth}
+            auth={auth}
             header={
                 <h2 className="inline-block  font-semibold text-xl text-gray-800 leading-tight">
                     Edit Destination
@@ -47,61 +42,23 @@ export default function DestinationEditPage(props) {
             <WrapperContent>
                 <ValidationErrors errors={errors} />
 
-                <AlertCard isOpen={wasSuccessful} variant="success">
-                    {flash?.message}
+                <AlertCard
+                    isOpen={wasSuccessful || !!flash?.success}
+                    variant="success"
+                >
+                    <p>{flash?.success}</p>
                 </AlertCard>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="name"
-                        >
-                            Destination Name
-                        </label>
+                <AlertCard isOpen={!!flash?.error} variant="danger">
+                    <p>{flash?.error}</p>
+                </AlertCard>
 
-                        <Input
-                            key="name"
-                            isFocused={true}
-                            value={data.name}
-                            className="w-full"
-                            handleChange={(e) => {
-                                setData("name", e.target.value);
-                            }}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="city"
-                        >
-                            City
-                        </label>
-
-                        <Select
-                            key="city"
-                            value={data.city_type}
-                            className="w-full"
-                            onChange={(value) => {
-                                setData("city_type", value);
-                            }}
-                            options={CITY_OPTIONS_WITHOUT_ALL}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-4 flex justify-end">
-                        <Button
-                            processing={processing}
-                            colorScheme="gray"
-                            variant="outline"
-                            size="md"
-                        >
-                            Edit
-                        </Button>
-                    </div>
-                </form>
+                <DestinationForm
+                    data={data}
+                    handleSubmit={handleSubmit}
+                    processing={processing}
+                    setData={setData}
+                />
             </WrapperContent>
         </Authenticated>
     );
