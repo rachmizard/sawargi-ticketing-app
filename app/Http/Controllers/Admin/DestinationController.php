@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Destination\StoreDestinationRequest;
 use App\Http\Requests\Admin\Destination\UpdateDestinationRequest;
-use App\Models\Destination;
 use App\Services\Admin\DestinationService;
 
 use Illuminate\Http\Request;
@@ -55,20 +54,20 @@ class DestinationController extends Controller
      * @param  \App\Models\Destination  $destination
      * @return \Illuminate\Http\Response
      */
-    public function show(Destination $destination)
+    public function show($id, DestinationService $destinationService)
     {
         return Inertia::render('Admin/Destination/Edit', [
-            'destination' => $destination
+            'destination' => $destinationService->find($id)
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Destination  $destination
+     * @param  string  $destination
      * @return \Illuminate\Http\Response
      */
-    public function edit(Destination $destination)
+    public function edit($id)
     {
         //
     }

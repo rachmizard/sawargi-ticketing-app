@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreShuttleRequest;
-use App\Http\Requests\UpdateShuttleRequest;
-use App\Models\Shuttle;
+
+use App\Http\Requests\Admin\Shuttle\StoreShuttleRequest;
+use App\Http\Requests\Admin\Shuttle\UpdateShuttleRequest;
+
+use App\Services\Admin\ShuttleService;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -15,21 +17,14 @@ class ShuttleController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Services\Admin\ShuttleService  $shuttle
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, ShuttleService $shuttle)
     {
-        $query = Shuttle::query();
-
-        $query->orderBy('created_at', 'desc');
-
-        if ($request->has('per_page')) {
-            $request->session()->put('per_page', $request->get('per_page'));
-        }
-
         return Inertia::render('Admin/Shuttle', [
-            'shuttles' => $query->paginate($request->session()->get('per_page', 10))
+            'shuttles' => $shuttle->all($request),
         ]);
     }
 
@@ -46,50 +41,56 @@ class ShuttleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreShuttleRequest  $request
+     * @param  \App\Http\Requests\Admin\Shuttle\StoreShuttleRequest  $request
+     * @param  \App\Services\Admin\ShuttleService  $shuttle
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreShuttleRequest $request)
+    public function store(StoreShuttleRequest $request, ShuttleService $shuttle)
     {
-        Shuttle::create($request->validated());
+        $shuttle->create($request->validated());
         return Redirect::route('admin.shuttles')->with('message', 'Shuttle created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Shuttle  $shuttle
+     * @param  string  $id
+     * @param  \App\Services\Admin\ShuttleService  $shuttle
      * @return \Illuminate\Http\Response
      */
-    public function show(Shuttle $shuttle)
+    public function show($id, ShuttleService $shuttle)
     {
         return Inertia::render('Admin/Shuttle/Edit', [
-            'shuttle' => $shuttle
+            'shuttle' => $shuttle->find($id)
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateShuttleRequest  $request
-     * @param  \App\Models\Shuttle  $shuttle
+     * @param  \App\Http\Requests\Admin\Shuttle\UpdateShuttleRequest  $request
+     * @param  string  $id
+     * @param  \App\Services\Admin\ShuttleService  $shuttle
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateShuttleRequest $request, Shuttle $shuttle)
+    public function update(UpdateShuttleRequest $request, $id, ShuttleService $shuttle)
     {
-        $shuttle->update($request->validated());
+        $shuttle->update($request->validated(), $id);
+
         return Redirect::route('admin.shuttles')->with('message', 'Shuttle updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Shuttle  $shuttle
+     * @param  string  $id
+     * @param  \App\Services\Admin\ShuttleService  $shuttle
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Shuttle $shuttle)
+    public function destroy($id, ShuttleService $shuttle)
     {
-        $shuttle->delete();
+        $shuttle->delete($id);
+
         return Redirect::route('admin.shuttles')->with('message', 'Shuttle deleted successfully.');
     }
 }
