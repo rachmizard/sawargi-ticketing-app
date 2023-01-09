@@ -6,6 +6,7 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
 import {
     AlertCard,
+    Badge,
     Button,
     Datatable,
     Modal,
@@ -43,7 +44,7 @@ export default function Outlet(props) {
             headerName: "Phone",
             field: "phone",
             render: (props) => {
-                return props.phone;
+                return <Badge variant="outline">{props.phone}</Badge>;
             },
         },
         {

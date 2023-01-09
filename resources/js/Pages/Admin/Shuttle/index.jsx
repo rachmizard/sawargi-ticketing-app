@@ -5,6 +5,7 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
 import {
     AlertCard,
+    Badge,
     Button,
     Datatable,
     Modal,
@@ -42,6 +43,22 @@ export default function Shuttle(props) {
             field: "capacity",
             render: (props) => {
                 return props.capacity;
+            },
+        },
+        {
+            headerName: "Status",
+            field: "status",
+            render: (props) => {
+                return (
+                    <Badge
+                        variant="outline"
+                        colorScheme={
+                            props.status === "available" ? "success" : "light"
+                        }
+                    >
+                        {props.status[0].toUpperCase() + props.status.slice(1)}
+                    </Badge>
+                );
             },
         },
         {

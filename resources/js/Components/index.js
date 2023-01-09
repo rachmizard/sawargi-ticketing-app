@@ -1,5 +1,6 @@
 export { default as AlertCard } from "./AlertCard";
 export { default as ApplicationLogo } from "./ApplicationLogo";
+export { default as Badge } from "./Badge";
 export { default as Button } from "./Button";
 export { default as Checkbox } from "./Checkbox";
 export { default as Datatable } from "./Datatable";
