@@ -2,7 +2,7 @@ import React from "react";
 import { Inertia } from "@inertiajs/inertia";
 import { usePage } from "@inertiajs/inertia-react";
 
-export default function DestinationFilterSection({
+export default function OutletFilterSection({
     values,
     onChange,
     useServerSideFilter = false,
@@ -24,7 +24,7 @@ export default function DestinationFilterSection({
 
         if (!useServerSideFilter) return;
 
-        Inertia.get(route("admin.destinations"), queryParams, {
+        Inertia.get(route("admin.outlets"), queryParams, {
             preserveState: true,
             preserveScroll: true,
         });

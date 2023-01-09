@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Admin\DestinationController;
+use App\Http\Controllers\Admin\OutletController;
 use App\Http\Controllers\Admin\ShuttleController;
 use App\Http\Controllers\Admin\TicketController;
 
@@ -13,6 +14,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->as("admin.")->group(funct
         return Inertia::render('Admin/Dashboard');
     })->name('dashboard');
 
+    Route::resource('outlets', OutletController::class)->names([
+        'index' => 'outlets',
+        'create' => 'outlets.create',
+        'store' => 'outlets.store',
+        'show' => 'outlets.show',
+        'edit' => 'outlets.edit',
+        'update' => 'outlets.update',
+        'destroy' => 'outlets.destroy',
+    ]);
 
     Route::resource('destinations', DestinationController::class)->names([
         'index' => 'destinations',

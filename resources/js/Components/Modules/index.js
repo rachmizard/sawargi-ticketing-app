@@ -1,2 +1,7 @@
-export { DestinationFilterSection, TicketForm, DestinationForm } from "./Admin";
+export {
+    OutletFilterSection,
+    DestinationForm,
+    OutletForm,
+    TicketForm,
+} from "./Admin";
 export { FindTicketSection, ScheduleCard } from "./Guest";

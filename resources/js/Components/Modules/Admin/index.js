@@ -1,4 +1,6 @@
 export { default as DestinationForm } from "./Destination/Form";
-export { default as DestinationFilterSection } from "./Destination/FilterSection";
+
+export { default as OutletFilterSection } from "./Outlet/FilterSection";
+export { default as OutletForm } from "./Outlet/Form";
 
 export { default as TicketForm } from "./Ticket/Form";

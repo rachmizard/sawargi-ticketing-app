@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Outlet\StoreOutletRequest;
 use App\Http\Requests\Admin\Outlet\UpdateOutletRequest;
 
-use App\Models\Outlet;
+use App\Services\Admin\OutletService;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class OutletController extends Controller
 {
@@ -16,9 +18,11 @@ class OutletController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, OutletService $outlet)
     {
-        //
+        return Inertia::render('Admin/Outlet', [
+            'outlets' => $outlet->all($request),
+        ]);
     }
 
     /**
@@ -28,7 +32,7 @@ class OutletController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Outlet/Create');
     }
 
     /**
@@ -37,29 +41,34 @@ class OutletController extends Controller
      * @param  App\Http\Requests\Admin\Outlet\StoreOutletRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreOutletRequest $request)
+    public function store(StoreOutletRequest $request, OutletService $outlet)
     {
-        //
+        $outlet->create($request->validated());
+
+        return redirect()->route('admin.outlets')->with('success', 'Outlet created successfully!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Outlet  $outlet
+     * @param  string  $id
+     * @param  \App\Services\Admin\OutletService  $outlet
      * @return \Illuminate\Http\Response
      */
-    public function show(Outlet $outlet)
+    public function show($id, OutletService $outlet)
     {
-        //
+        return Inertia::render('Admin/Outlet/Edit', [
+            'outlet' => $outlet->find($id),
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Outlet  $outlet
+     * @param  string  $outlet
      * @return \Illuminate\Http\Response
      */
-    public function edit(Outlet $outlet)
+    public function edit($id)
     {
         //
     }
@@ -68,22 +77,26 @@ class OutletController extends Controller
      * Update the specified resource in storage.
      *
      * @param  App\Http\Requests\Admin\Outlet\UpdateOutletRequest;  $request
-     * @param  \App\Models\Outlet  $outlet
+     * @param  string  $id
+     * @param  \App\Services\Admin\OutletService  $outlet
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateOutletRequest $request, Outlet $outlet)
+    public function update(UpdateOutletRequest $request, $id, OutletService $outlet)
     {
-        //
+        $outlet->update($request->validated(), $id);
+        return redirect()->route('admin.outlets')->with('success', 'Outlet updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Outlet  $outlet
+     * @param  string  $id
+     * @param  \App\Services\Admin\OutletService  $outlet
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Outlet $outlet)
+    public function destroy($id, OutletService $outlet)
     {
-        //
+        $outlet->delete($id);
+        return redirect()->route('admin.outlets')->with('success', 'Outlet deleted successfully!');
     }
 }

@@ -14,8 +14,9 @@ import {
 } from "@/Components";
 
 import Authenticated from "@/Layouts/Authenticated";
+import { OutletFilterSection } from "@/Components/Modules";
 
-export default function Destination(props) {
+export default function Outlet(props) {
     const {
         ziggy: { query },
     } = props || {};
@@ -32,24 +33,24 @@ export default function Destination(props) {
             },
         },
         {
-            headerName: "Departure From",
-            field: "from_outlet_id",
+            headerName: "Outlet Name",
+            field: "name",
             render: (props) => {
-                return props.from_outlet?.name;
+                return props.name;
             },
         },
         {
-            headerName: "Arrival To",
-            field: "to_outlet_id",
+            headerName: "Phone",
+            field: "phone",
             render: (props) => {
-                return props.to_outlet?.name;
+                return props.phone;
             },
         },
         {
-            headerName: "Shuttle/Vehicle",
-            field: "shuttle_id",
+            headerName: "City",
+            field: "city",
             render: (props) => {
-                return props.shuttle?.number_plate;
+                return props.city;
             },
         },
         {
@@ -58,7 +59,7 @@ export default function Destination(props) {
             render: (props) => {
                 return (
                     <div className="flex gap-2">
-                        <Link href={route("admin.destinations.show", props.id)}>
+                        <Link href={route("admin.outlets.show", props.id)}>
                             <Button
                                 size="sm"
                                 colorScheme="gray"
@@ -86,7 +87,7 @@ export default function Destination(props) {
 
     const handleChangePerPage = (value) => {
         Inertia.get(
-            route("admin.destinations"),
+            route("admin.outlets"),
             {
                 ...query,
                 per_page: value,
@@ -99,7 +100,7 @@ export default function Destination(props) {
     };
 
     const handleDelete = () => {
-        Inertia.delete(route("admin.destinations.destroy", id), {
+        Inertia.delete(route("admin.outlets.destroy", id), {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
@@ -114,36 +115,38 @@ export default function Destination(props) {
             errors={props.errors}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Destination List
+                    Outlet List
                 </h2>
             }
         >
-            <Head title="Destinations" />
+            <Head title="Outlets" />
 
             <WrapperContent>
-                <AlertCard isOpen={!!props.flash?.message} variant="success">
-                    {props.flash?.message}
+                <AlertCard isOpen={!!props.flash?.success} variant="success">
+                    {props.flash?.success}
                 </AlertCard>
 
                 <div className="p-6 bg-white border-b border-gray-200">
-                    <div className="flex gap-2 justify-end items-start mb-4">
+                    <div className="flex gap-2 justify-between items-start mb-4">
+                        <OutletFilterSection useServerSideFilter />
+
                         <Link
-                            href={route("admin.destinations.create")}
+                            href={route("admin.outlets.create")}
                             preserveScroll
                             allowFullScreen
                             as="button"
                         >
                             <Button colorScheme="gray" variant="outline">
-                                Create Destination
+                                Create Outlet
                             </Button>
                         </Link>
                     </div>
                 </div>
                 <Datatable
                     columnDefs={columnDefs}
-                    data={props.destinations.data ?? []}
+                    data={props.outlets.data ?? []}
                     paginationComponent={
-                        <Pagination links={props.destinations.links ?? []} />
+                        <Pagination links={props.outlets.links ?? []} />
                     }
                     perPage={query.per_page ?? 10}
                     onChangePerPage={handleChangePerPage}

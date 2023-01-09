@@ -30,6 +30,16 @@ export default function Authenticated({ auth, backUrl, header, children }) {
                                 </NavLink>
 
                                 <NavLink
+                                    href={route("admin.outlets")}
+                                    active={
+                                        route().current("admin.outlets") ||
+                                        route().current("admin.outlets.create")
+                                    }
+                                >
+                                    Outlet
+                                </NavLink>
+
+                                <NavLink
                                     href={route("admin.destinations")}
                                     active={
                                         route().current("admin.destinations") ||
