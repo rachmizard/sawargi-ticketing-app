@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Admin\Destination;
+namespace App\Http\Requests\Admin\Schedules;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class UpdateDestinationRequest extends FormRequest
+class UpdateScheduleRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,9 +25,11 @@ class UpdateDestinationRequest extends FormRequest
     public function rules()
     {
         return [
-            'from_outlet_id' => 'required|integer|exists:outlets,id',
-            'to_outlet_id' => 'required|integer|exists:outlets,id',
-            'shuttle_id' => 'required|integer|exists:shuttles,id',
+            'destination_id' => 'required|exists:destinations,id',
+            'departure_date' => 'required|date',
+            'arrival_date' => 'required|date',
+            'price' => 'required|integer',
+            'status' => 'required|in:pending,otw,arrived,cancelled',
         ];
     }
 }

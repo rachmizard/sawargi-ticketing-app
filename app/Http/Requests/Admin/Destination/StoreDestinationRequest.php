@@ -25,8 +25,9 @@ class StoreDestinationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'city_type' => 'in:jakarta,bandung|required|string|max:255',
+            'from_outlet_id' => 'required|integer|exists:outlets,id',
+            'to_outlet_id' => 'required|integer|exists:outlets,id',
+            'shuttle_id' => 'required|integer|exists:shuttles,id',
         ];
     }
 }

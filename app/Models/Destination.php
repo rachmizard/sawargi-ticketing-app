@@ -4,42 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Destination extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'city_type',
+        'from_outlet_id',
+        'to_outlet_id',
+        'shuttle_id',
     ];
 
-    protected $casts = [
-        'city_type' => 'string',
-    ];
-
-    public function getCityTypeAttribute($value)
+    public function fromOutlet()
     {
-        return ucfirst($value);
+        return $this->belongsTo(Outlet::class, 'from_outlet_id');
     }
 
-    public function setCityTypeAttribute($value)
+    public function toOutlet()
     {
-        $this->attributes['city_type'] = strtolower($value);
+        return $this->belongsTo(Outlet::class, 'to_outlet_id');
     }
 
-    public function scopeJakarta($query)
+    public function shuttle()
     {
-        return $query->where('city_type', 'jakarta');
-    }
-
-    public function scopeBandung($query)
-    {
-        return $query->where('city_type', 'bandung');
-    }
-
-    public function scopeByCity($query, $city)
-    {
-        return $query->where('city_type', $city);
+        return $this->belongsTo(Shuttle::class, 'shuttle_id', 'id');
     }
 }

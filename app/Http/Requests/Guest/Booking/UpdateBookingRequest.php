@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin\Destination;
+namespace App\Http\Requests\Guest\Booking;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class UpdateDestinationRequest extends FormRequest
+class UpdateBookingRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -15,7 +13,7 @@ class UpdateDestinationRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
+        return false;
     }
 
     /**
@@ -26,9 +24,7 @@ class UpdateDestinationRequest extends FormRequest
     public function rules()
     {
         return [
-            'from_outlet_id' => 'required|integer|exists:outlets,id',
-            'to_outlet_id' => 'required|integer|exists:outlets,id',
-            'shuttle_id' => 'required|integer|exists:shuttles,id',
+            //
         ];
     }
 }
