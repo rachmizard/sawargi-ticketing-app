@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Destination\StoreDestinationRequest;
 use App\Http\Requests\Admin\Destination\UpdateDestinationRequest;
+
+use App\Models\Outlet;
+use App\Models\Shuttle;
 use App\Services\Admin\DestinationService;
 
 use Illuminate\Http\Request;
@@ -32,7 +35,10 @@ class DestinationController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Destination/Create');
+        $outlets = Outlet::all();
+        $shuttles = Shuttle::available()->get();
+
+        return Inertia::render('Admin/Destination/Create', ['outlets' => $outlets, 'shuttles' => $shuttles]);
     }
 
     /**

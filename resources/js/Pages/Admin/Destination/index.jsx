@@ -33,17 +33,24 @@ export default function Destination(props) {
             },
         },
         {
-            headerName: "Destination Name",
-            field: "name",
+            headerName: "Departure From",
+            field: "from_outlet_id",
             render: (props) => {
-                return props.name;
+                return props.from_outlet?.name;
             },
         },
         {
-            headerName: "City",
-            field: "city_type",
+            headerName: "Arrival To",
+            field: "to_outlet_id",
             render: (props) => {
-                return props.city_type;
+                return props.props.to_outlet?.name;
+            },
+        },
+        {
+            headerName: "Shuttle/Vehicle",
+            field: "shuttle_id",
+            render: (props) => {
+                return props.props.shuttle?.number_plate;
             },
         },
         {

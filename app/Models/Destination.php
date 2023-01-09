@@ -18,12 +18,12 @@ class Destination extends Model
 
     public function fromOutlet()
     {
-        return $this->belongsTo(Outlet::class, 'from_outlet_id');
+        return $this->belongsTo(Outlet::class, 'from_outlet_id', 'id');
     }
 
     public function toOutlet()
     {
-        return $this->belongsTo(Outlet::class, 'to_outlet_id');
+        return $this->belongsTo(Outlet::class, 'to_outlet_id', 'id');
     }
 
     public function shuttle()

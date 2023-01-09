@@ -1,9 +1,9 @@
+/* eslint-disable no-undef */
 import { Head, useForm } from "@inertiajs/inertia-react";
 
 import {
     AlertCard,
     Button,
-    Input,
     Select,
     ValidationErrors,
     WrapperContent,
@@ -11,13 +11,14 @@ import {
 
 import Authenticated from "@/Layouts/Authenticated";
 
-import { CITY_OPTIONS_WITHOUT_ALL } from "@/Utils/constants";
-
 export default function DestinationCreatePage(props) {
+    const { auth, shuttles, outlets } = props;
+
     const { errors, data, processing, wasSuccessful, reset, setData, post } =
         useForm("CreateDestinationForm", {
             name: "",
-            city_type: "jakarta",
+            from_outlet_id: "",
+            to_outlet_id: "",
         });
 
     const handleSubmit = (e) => {
@@ -31,9 +32,26 @@ export default function DestinationCreatePage(props) {
         });
     };
 
+    const departureOptions = outlets.map((outlet) => ({
+        value: outlet.id,
+        label: outlet.name,
+        city_type: outlet.city_type,
+    }));
+
+    const arrivalOptions = outlets.map((outlet) => ({
+        value: outlet.id,
+        label: outlet.name,
+        city_type: outlet.city_type,
+    }));
+
+    const shuttleOptions = shuttles.map((shuttle) => ({
+        value: shuttle.id,
+        label: shuttle.number_plate,
+    }));
+
     return (
         <Authenticated
-            auth={props.auth}
+            auth={auth}
             header={
                 <h2 className="inline-block  font-semibold text-xl text-gray-800 leading-tight">
                     Create Destination
@@ -54,39 +72,66 @@ export default function DestinationCreatePage(props) {
                     <div className="mb-4">
                         <label
                             className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="name"
+                            htmlFor="from_outlet_id"
                         >
-                            Destination Name
-                        </label>
-
-                        <Input
-                            key="name"
-                            isFocused={true}
-                            value={data.name}
-                            className="w-full"
-                            handleChange={(e) => {
-                                setData("name", e.target.value);
-                            }}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="city"
-                        >
-                            City
+                            Departure From
                         </label>
 
                         <Select
-                            key="city"
-                            value={data.city_type}
+                            key="from_outlet_id"
+                            value={data.from_outlet_id}
                             className="w-full"
                             onChange={(value) => {
-                                setData("city_type", value);
+                                setData("from_outlet_id", value);
                             }}
-                            options={CITY_OPTIONS_WITHOUT_ALL}
+                            options={departureOptions}
                             required
+                            emptyOption
+                            emptyOptionLabel="Choose Departure From"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="to_outlet_id"
+                        >
+                            Arrival To
+                        </label>
+
+                        <Select
+                            key="to_outlet_id"
+                            value={data.to_outlet_id}
+                            className="w-full"
+                            onChange={(value) => {
+                                setData("to_outlet_id", value);
+                            }}
+                            options={arrivalOptions}
+                            required
+                            emptyOption
+                            emptyOptionLabel="Choose Arrival To"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="shuttle_id"
+                        >
+                            Shuttle/Vehicle
+                        </label>
+
+                        <Select
+                            key="shuttle_id"
+                            value={data.shuttle_id}
+                            className="w-full"
+                            onChange={(value) => {
+                                setData("shuttle_id", value);
+                            }}
+                            options={shuttleOptions}
+                            required
+                            emptyOption
+                            emptyOptionLabel="Choose Shuttle/Vehicle"
                         />
                     </div>
 
