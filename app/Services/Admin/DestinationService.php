@@ -40,7 +40,9 @@ class DestinationService implements DestinationRepository
             return redirect()->back()->with('error', 'Shuttle is not available');
         }
 
-        $this->model::create($data);
+        $destination = $this->model::create($data);
+
+        $destination->shuttle->update(['status' => 'unavailable']);
 
         return redirect()->route("admin.destinations")->with('success', 'Destination created successfully');
     }
