@@ -16,17 +16,19 @@ import { SHUTTLE_STATUS_OPTIONS } from "@/Utils/constants";
 export default function ShuttleEditPage(props) {
     const { shuttle } = props;
 
-    const { errors, data, processing, wasSuccessful, reset, setData, post } =
-        useForm("CreateShuttleForm", {
+    const { errors, data, processing, wasSuccessful, reset, setData, put } =
+        useForm("EditShuttleForm", {
             number_plate: shuttle.number_plate,
             capacity: shuttle.capacity,
-            status: shuttle.status,
+            status: shuttle.status?.toLowerCase(),
         });
+
+    console.log("data", data);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        post(route("admin.shuttles.store"), {
+        put(route("admin.shuttles.update", shuttle.id), {
             data,
             onSuccess: () => {
                 reset();
@@ -101,7 +103,7 @@ export default function ShuttleEditPage(props) {
 
                         <Select
                             key="status"
-                            value={data.city_type}
+                            value={data.status}
                             className="w-full"
                             onChange={(value) => {
                                 setData("status", value);
