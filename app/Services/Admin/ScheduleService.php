@@ -151,6 +151,21 @@ class ScheduleService implements ScheduleRepository
 
                 // 1.1.5 set new shuttle status to unavailable
                 $shuttle->update(['status' => 'unavailable']);
+
+                // 1.1.6 update schedule shuttle id
+                $schedule->update(['shuttle_id' => $newShuttleId]);
+
+                // 1.1.7 remove old seats
+                $schedule->seats()->delete();
+
+                // 1.1.8 create new seats
+                for ($i = 1; $i <= $shuttle->capacity; $i++) {
+                    $schedule->seats()->create([
+                        'schedule_id' => $schedule->id,
+                        'seat_number' => $i,
+                        'status' => 'vacant',
+                    ]);
+                }
             }
 
             // 2. update ticket

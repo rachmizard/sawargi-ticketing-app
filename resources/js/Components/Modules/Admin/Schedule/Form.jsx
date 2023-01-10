@@ -37,13 +37,13 @@ export default function ScheduleForm({
 
     const getSelectedDestination = () => {
         return destinationOptions.find(
-            (destination) => destination.value === data.destination_id
+            (destination) => destination.value === data?.destination_id
         );
     };
 
     const getSelectedShuttle = () => {
         return shuttleOptions.find(
-            (destination) => destination.value === data.shuttle_id
+            (destination) => destination.value === data?.shuttle_id
         );
     };
 

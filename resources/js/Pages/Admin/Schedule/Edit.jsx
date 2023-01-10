@@ -6,15 +6,15 @@ import { ScheduleForm } from "@/Components/Modules";
 import Authenticated from "@/Layouts/Authenticated";
 
 export default function ScheduleEditPage(props) {
-    const { ticket, flash } = props;
+    const { schedule, flash } = props;
 
-    const { errors, data, processing, reset, setData, put } = useForm({
-        destination_id: ticket.destination_id,
-        shuttle_id: ticket.shuttle_id,
-        price: ticket.price,
-        depart_date: ticket.depart_date,
-        arrival_date: ticket.arrival_date,
-        status: ticket.status?.toLowerCase(),
+    const { errors, data, processing, setData, put } = useForm({
+        destination_id: schedule.destination_id,
+        shuttle_id: schedule.shuttle_id,
+        price: schedule.price,
+        departure_date: schedule.departure_date,
+        arrival_date: schedule.arrival_date,
+        status: schedule.status?.toLowerCase(),
     });
 
     const handleSubmit = (e) => {
@@ -23,11 +23,10 @@ export default function ScheduleEditPage(props) {
         data.price = parseInt(data.price);
 
         // eslint-disable-next-line no-undef
-        put(route("admin.schedules.update", ticket.id), {
+        put(route("admin.schedules.update", schedule.id), {
             data,
-            onSuccess: () => {
-                reset();
-            },
+            preserveScroll: true,
+            preserveState: true,
         });
     };
 
