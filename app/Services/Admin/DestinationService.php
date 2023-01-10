@@ -16,7 +16,7 @@ class DestinationService implements DestinationRepository
 
     public function all(Request $request)
     {
-        $query = $this->with(['shuttle:id,number_plate', 'fromOutlet:id,name', 'toOutlet:id,name']);
+        $query = $this->with(['fromOutlet:id,name', 'toOutlet:id,name']);
 
         $query->orderBy('created_at', 'desc');
 
@@ -34,16 +34,7 @@ class DestinationService implements DestinationRepository
 
     public function create($data)
     {
-        $shuttle = Shuttle::find($data['shuttle_id']);
-
-        if ($shuttle->status !== 'available') {
-            return redirect()->back()->with('error', 'Shuttle is not available');
-        }
-
-        $destination = $this->model::create($data);
-
-        $destination->shuttle->update(['status' => 'unavailable']);
-
+        $this->model::create($data);
         return redirect()->route("admin.destinations")->with('success', 'Destination created successfully');
     }
 
@@ -59,25 +50,7 @@ class DestinationService implements DestinationRepository
 
     public function update($data, $id)
     {
-        $destination = $this->with('shuttle:id,status')->find($id);
-
-        // check if shuttle is changed
-        if ($destination->shuttle_id !== intval($data['shuttle_id'])) {
-            // update new shuttle status to unavailable
-            $newShuttle = Shuttle::find($data['shuttle_id']);
-
-            // check new shuttle is not available
-            if ($newShuttle->status !== 'available') {
-                return Redirect::back()->with('error', 'Shuttle is not available');
-            }
-
-            $newShuttle->update(['status' => 'unavailable']);
-
-            $oldShuttle = $destination->shuttle;
-            // update old shuttle status to available
-            $oldShuttle->update(['status' => 'available']);
-        }
-
+        $destination = $this->find($id);
         $destination->update($data);
 
         return Redirect::route("admin.destinations")->with('success', 'Destination updated successfully');

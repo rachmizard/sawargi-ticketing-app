@@ -28,7 +28,6 @@ class UpdateDestinationRequest extends FormRequest
         return [
             'from_outlet_id' => 'required|integer|exists:outlets,id',
             'to_outlet_id' => 'required|integer|exists:outlets,id',
-            'shuttle_id' => 'required|integer|exists:shuttles,id',
         ];
     }
 }

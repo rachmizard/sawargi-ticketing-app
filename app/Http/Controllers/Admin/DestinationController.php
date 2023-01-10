@@ -36,9 +36,8 @@ class DestinationController extends Controller
     public function create()
     {
         $outlets = Outlet::all();
-        $shuttles = Shuttle::available()->get();
 
-        return Inertia::render('Admin/Destination/Create', ['outlets' => $outlets, 'shuttles' => $shuttles]);
+        return Inertia::render('Admin/Destination/Create', ['outlets' => $outlets]);
     }
 
     /**
@@ -62,12 +61,10 @@ class DestinationController extends Controller
     {
 
         $outlets = Outlet::all();
-        $shuttles = Shuttle::all();
 
         return Inertia::render('Admin/Destination/Edit', [
             'destination' => $destinationService->with(['fromOutlet:id,city'])->find($id),
             'outlets' => $outlets,
-            'shuttles' => $shuttles
         ]);
     }
 

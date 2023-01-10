@@ -6,7 +6,6 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
 import {
     AlertCard,
-    Badge,
     Button,
     Datatable,
     Modal,
@@ -44,17 +43,6 @@ export default function Destination(props) {
             field: "to_outlet_id",
             render: (props) => {
                 return props.to_outlet?.name;
-            },
-        },
-        {
-            headerName: "Shuttle/Vehicle",
-            field: "shuttle_id",
-            render: (props) => {
-                return (
-                    <Badge variant="outline">
-                        {props.shuttle?.number_plate}
-                    </Badge>
-                );
             },
         },
         {

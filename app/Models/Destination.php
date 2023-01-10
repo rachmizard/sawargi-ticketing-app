@@ -13,7 +13,6 @@ class Destination extends Model
     protected $fillable = [
         'from_outlet_id',
         'to_outlet_id',
-        'shuttle_id',
     ];
 
     public function fromOutlet()
@@ -24,10 +23,5 @@ class Destination extends Model
     public function toOutlet()
     {
         return $this->belongsTo(Outlet::class, 'to_outlet_id', 'id');
-    }
-
-    public function shuttle()
-    {
-        return $this->belongsTo(Shuttle::class, 'shuttle_id', 'id');
     }
 }

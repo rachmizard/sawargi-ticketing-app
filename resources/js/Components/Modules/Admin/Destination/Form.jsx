@@ -12,7 +12,7 @@ export default function DestinationForm({
     data,
     buttonSubmitLabel = "Submit",
 }) {
-    const { outlets, shuttles, destination } = usePage().props;
+    const { outlets, destination } = usePage().props;
 
     const [selectedCity, setSelectedCity] = useState(
         destination ? destination?.from_outlet?.city?.toLowerCase() : null
@@ -33,11 +33,6 @@ export default function DestinationForm({
         .filter((outlet) => {
             return outlet.city !== selectedCity?.toLowerCase();
         });
-
-    const shuttleOptions = shuttles.map((shuttle) => ({
-        value: shuttle.id,
-        label: shuttle.number_plate,
-    }));
 
     return (
         <form onSubmit={handleSubmit}>
@@ -86,27 +81,6 @@ export default function DestinationForm({
                         emptyOptionLabel="Choose Arrival To"
                     />
                 </div>
-            </div>
-            <div className="mb-4">
-                <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="shuttle_id"
-                >
-                    Shuttle/Vehicle
-                </label>
-
-                <Select
-                    key="shuttle_id"
-                    value={data.shuttle_id}
-                    className="w-full"
-                    onChange={(value) => {
-                        setData("shuttle_id", value);
-                    }}
-                    options={shuttleOptions}
-                    required
-                    emptyOption
-                    emptyOptionLabel="Choose Shuttle/Vehicle"
-                />
             </div>
             <div className="mb-4 flex justify-end">
                 <Button

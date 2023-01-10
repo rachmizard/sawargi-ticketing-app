@@ -13,7 +13,6 @@ export default function DestinationCreatePage(props) {
         useForm("CreateDestinationForm", {
             from_outlet_id: "",
             to_outlet_id: "",
-            shuttle_id: "",
         });
 
     const handleSubmit = (e) => {

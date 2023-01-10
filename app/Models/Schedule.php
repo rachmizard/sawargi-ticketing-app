@@ -12,6 +12,7 @@ class Schedule extends Model
 
     protected $fillable = [
         'destination_id',
+        'shuttle_id',
         'departure_date',
         'arrival_date',
         'price',
@@ -20,12 +21,12 @@ class Schedule extends Model
 
     public function destination()
     {
-        return $this->belongsTo(Destination::class);
+        return $this->belongsTo(Destination::class, 'destination_id', 'id');
     }
 
     public function shuttle()
     {
-        return $this->belongsTo(Shuttle::class);
+        return $this->belongsTo(Shuttle::class, 'shuttle_id', 'id');
     }
 
     public function fromOutlet()
