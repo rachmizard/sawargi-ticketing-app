@@ -17,6 +17,7 @@ export default function Pagination({ links = [] }) {
                         disabled={link.active || !link.url}
                         variant="outline"
                         colorScheme="gray"
+                        size="xs"
                     >
                         <span
                             dangerouslySetInnerHTML={{

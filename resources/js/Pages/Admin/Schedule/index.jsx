@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Head, Link } from "@inertiajs/inertia-react";
 import { Inertia } from "@inertiajs/inertia";
+import { format } from "date-fns";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
 import {
@@ -15,7 +16,7 @@ import {
 } from "@/Components";
 
 import Authenticated from "@/Layouts/Authenticated";
-import { format } from "date-fns";
+import { formatRupiah } from "@/Utils/formatter";
 
 export default function Schedule(props) {
     const {
@@ -56,7 +57,7 @@ export default function Schedule(props) {
             headerName: "Price",
             field: "price",
             render: (props) => {
-                return props.price;
+                return formatRupiah(props.price);
             },
         },
         {
@@ -73,7 +74,10 @@ export default function Schedule(props) {
             headerName: "Arrival Date",
             field: "arrival_date",
             render: (props) => {
-                return props.arrival_date;
+                return format(
+                    new Date(props.arrival_date),
+                    "dd MMM yyyy HH:mm"
+                );
             },
         },
         {

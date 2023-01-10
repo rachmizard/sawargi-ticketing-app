@@ -14,7 +14,7 @@ export default function Datatable({
 
     return (
         <div className="p-6 bg-white border-b border-gray-200">
-            <table className="table-auto w-full">
+            <table className="table-auto text-sm w-full">
                 <thead>
                     <tr>
                         {columnDefs.map((column, key) => (
@@ -53,7 +53,7 @@ export default function Datatable({
                     )}
                 </tbody>
             </table>
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between mt-8">
                 {paginationComponent}
 
                 <Select
