@@ -13,9 +13,9 @@ class Schedule extends Model
     protected $fillable = [
         'destination_id',
         'shuttle_id',
+        'price',
         'departure_date',
         'arrival_date',
-        'price',
         'status',
     ];
 
@@ -29,14 +29,14 @@ class Schedule extends Model
         return $this->belongsTo(Shuttle::class, 'shuttle_id', 'id');
     }
 
-    public function fromOutlet()
+    public function shuttleJobs()
     {
-        return $this->belongsTo(Outlet::class, 'from_outlet_id');
+        return $this->hasMany(ShuttleJob::class, 'schedule_id', 'id');
     }
 
-    public function toOutlet()
+    public function seats()
     {
-        return $this->belongsTo(Outlet::class, 'to_outlet_id');
+        return $this->hasMany(Seat::class, 'schedule_id', 'id');
     }
 
     public function scopePending($query)

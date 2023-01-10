@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\OutletController;
+use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\ShuttleController;
 use App\Http\Controllers\Admin\TicketController;
 
@@ -52,5 +53,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->as("admin.")->group(funct
         'edit' => 'tickets.edit',
         'update' => 'tickets.update',
         'destroy' => 'tickets.destroy',
+    ]);
+
+    Route::resource('schedules', ScheduleController::class)->names([
+        'index' => 'schedules',
+        'create' => 'schedules.create',
+        'store' => 'schedules.store',
+        'show' => 'schedules.show',
+        'edit' => 'schedules.edit',
+        'update' => 'schedules.update',
+        'destroy' => 'schedules.destroy',
     ]);
 });

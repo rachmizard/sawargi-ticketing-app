@@ -15,6 +15,8 @@ class RemoveShuttleIdFromDestinationsTable extends Migration
     {
         Schema::table('destinations', function (Blueprint $table) {
             $table->dropForeign(['shuttle_id']);
+
+
             $table->dropColumn('shuttle_id');
         });
     }

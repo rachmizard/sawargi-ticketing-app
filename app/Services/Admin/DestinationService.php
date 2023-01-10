@@ -3,14 +3,13 @@
 namespace App\Services\Admin;
 
 use App\Models\Destination;
-use App\Models\Shuttle;
 use App\Repositories\Admin\DestinationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
 class DestinationService implements DestinationRepository
 {
-    public function __construct(private $model = Destination::class)
+    public function __construct(public $model = Destination::class)
     {
     }
 
@@ -34,6 +33,13 @@ class DestinationService implements DestinationRepository
 
     public function create($data)
     {
+
+        $destination = $this->query()->where('from_outlet_id', $data['from_outlet_id'])->where('to_outlet_id', $data['to_outlet_id'])->first();
+
+        if ($destination) {
+            return Redirect::back()->with('error', 'Destination already exists');
+        }
+
         $this->model::create($data);
         return redirect()->route("admin.destinations")->with('success', 'Destination created successfully');
     }
@@ -51,6 +57,13 @@ class DestinationService implements DestinationRepository
     public function update($data, $id)
     {
         $destination = $this->find($id);
+
+        $exists = $this->query()->where('from_outlet_id', $data['from_outlet_id'])->where('to_outlet_id', $data['to_outlet_id'])->first();
+
+        if ($exists && $exists->id !== $destination->id) {
+            return Redirect::back()->with('error', 'Destination already exists');
+        }
+
         $destination->update($data);
 
         return Redirect::route("admin.destinations")->with('success', 'Destination updated successfully');

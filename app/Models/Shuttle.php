@@ -20,6 +20,11 @@ class Shuttle extends Model
         return $this->hasMany(ShuttleJob::class, 'shuttle_id', 'id');
     }
 
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'shuttle_id', 'id');
+    }
+
     public function scopeAvailable($query)
     {
         return $query->where('status', 'available');

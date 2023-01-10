@@ -76,11 +76,13 @@ export default function Authenticated({ auth, backUrl, header, children }) {
                                  * TODO: Refactor to schedule
                                  */}
                                 <NavLink
-                                    href={route("admin.tickets")}
+                                    href={route("admin.schedules")}
                                     icon={<CalendarDaysIcon width={18} />}
                                     active={
-                                        route().current("admin.tickets") ||
-                                        route().current("admin.tickets.create")
+                                        route().current("admin.schedules") ||
+                                        route().current(
+                                            "admin.schedules.create"
+                                        )
                                     }
                                 >
                                     Schedules

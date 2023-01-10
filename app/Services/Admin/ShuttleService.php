@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class ShuttleService implements ShuttleRepository
 {
 
-    public function __construct(private $model = Shuttle::class)
+    public function __construct(public $model = Shuttle::class)
     {
     }
 

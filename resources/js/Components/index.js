@@ -6,6 +6,7 @@ export { default as Checkbox } from "./Checkbox";
 export { default as Datatable } from "./Datatable";
 export { default as Datepicker } from "./Datepicker";
 export { default as Dropdown } from "./Dropdown";
+export { default as DynamicSelect } from "./DynamicSelect";
 export { default as Input } from "./Input";
 export { default as Label } from "./Label";
 export { default as Modal } from "./Modal";

@@ -10,8 +10,8 @@ class ShuttleJob extends Model
     use HasFactory;
 
     protected $fillable = [
+        'schedule_id',
         'shuttle_id',
-        'ticket_id',
         'status',
     ];
 
@@ -20,9 +20,9 @@ class ShuttleJob extends Model
         return $this->belongsTo(Shuttle::class, 'shuttle_id', 'id');
     }
 
-    public function ticket()
+    public function schedule()
     {
-        return $this->belongsTo(Ticket::class, 'ticket_id', 'id');
+        return $this->belongsTo(Schedule::class, 'schedule_id', 'id');
     }
 
     public function scopePending($query)
@@ -50,9 +50,9 @@ class ShuttleJob extends Model
         return $query->where('shuttle_id', $shuttle_id);
     }
 
-    public function scopeByTicket($query, $ticket_id)
+    public function scopeBySchedule($query, $schedule_id)
     {
-        return $query->where('ticket_id', $ticket_id);
+        return $query->where('schedule_id', $schedule_id);
     }
 
     public function scopeByStatus($query, $status)

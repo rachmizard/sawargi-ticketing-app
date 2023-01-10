@@ -26,6 +26,7 @@ class UpdateScheduleRequest extends FormRequest
     {
         return [
             'destination_id' => 'required|exists:destinations,id',
+            'shuttle_id' => 'required|exists:shuttles,id',
             'departure_date' => 'required|date',
             'arrival_date' => 'required|date',
             'price' => 'required|integer',

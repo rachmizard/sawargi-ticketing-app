@@ -13,6 +13,6 @@ class ShuttleSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Shuttle::factory()->count(10)->create();
+        \App\Models\Shuttle::factory()->count(300)->create();
     }
 }
