@@ -1,5 +1,4 @@
 import { forwardRef } from "react";
-import { format } from "date-fns";
 
 import ReactDatePicker from "react-datepicker";
 import Input from "./Input";
@@ -23,7 +22,7 @@ const CustomDateInput = forwardRef(({ value = new Date(), onClick }, ref) => (
     <Input
         ref={ref}
         onClick={onClick}
-        value={format(new Date(value), "dd MMMM yyyy hh:mm a")}
+        value={value}
         placeholder="Select Date"
         className="w-full"
     />
