@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Guest\BookingController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +15,21 @@ use Inertia\Inertia;
 |
 */
 
-Route::middleware(['role:user'])->get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+
+
+
+Route::middleware(['role:user'])->group(function () {
+
+    Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+
+    Route::resource('/booking', BookingController::class)->names([
+        'index' => 'booking.index',
+        'book' => 'booking.create',
+        'store' => 'booking.store',
+        'show' => 'booking.show',
+        'edit' => 'booking.edit',
+        'update' => 'booking.update',
+        'destroy' => 'booking.destroy',
     ]);
 });
 

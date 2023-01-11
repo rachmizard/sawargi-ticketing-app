@@ -29,7 +29,7 @@ export default function Button({
     }[variant];
 
     const baseClasses =
-        "inline-flex items-center rounded-md font-semibold text-xs uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150";
+        "inline-flex items-center justify-center rounded-md font-semibold text-xs uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150";
 
     const sizes = {
         xs: "text-xs px-2 py-1",

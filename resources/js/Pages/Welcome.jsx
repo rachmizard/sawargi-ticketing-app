@@ -8,16 +8,32 @@ import {
 } from "@/Components/Modules";
 
 import UserLayout from "@/Layouts/User";
+import { Inertia } from "@inertiajs/inertia";
 
 export default function Welcome(props) {
+    const {
+        auth,
+        schedules,
+        ziggy: { query },
+    } = props;
+
+    const isSearching = Object.keys(query).length > 0;
+
+    function onFilter(values) {
+        Inertia.get(route("welcome"), values, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    }
+
     return (
-        <UserLayout {...props}>
+        <UserLayout auth={auth}>
             <Head title="Welcome" />
             <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pb-8 bg-white mt-5 shadow-sm rounded-md">
-                <ScheduleFilterForm />
+                <ScheduleFilterForm queries={query} onFilter={onFilter} />
 
-                {/* <ScheduleResult /> */}
-                <ScheduleEmpty />
+                {isSearching && <ScheduleResult schedules={schedules} />}
+                {!isSearching && <ScheduleEmpty />}
             </div>
         </UserLayout>
     );

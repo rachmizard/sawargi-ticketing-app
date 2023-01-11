@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Guest\Booking;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateBookingRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UpdateBookingRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::check();
     }
 
     /**

@@ -4,6 +4,7 @@ import { AlertCard, ValidationErrors, WrapperContent } from "@/Components";
 import { ScheduleForm } from "@/Components/Modules";
 
 import Authenticated from "@/Layouts/Authenticated";
+import { format } from "date-fns";
 
 export default function ScheduleEditPage(props) {
     const { schedule, flash } = props;
@@ -21,6 +22,16 @@ export default function ScheduleEditPage(props) {
         e.preventDefault();
 
         data.price = parseInt(data.price);
+
+        data.departure_date = format(
+            new Date(data.departure_date),
+            "yyyy-MM-dd HH:mm:ss"
+        );
+
+        data.arrival_date = format(
+            new Date(data.arrival_date),
+            "yyyy-MM-dd HH:mm:ss"
+        );
 
         // eslint-disable-next-line no-undef
         put(route("admin.schedules.update", schedule.id), {
