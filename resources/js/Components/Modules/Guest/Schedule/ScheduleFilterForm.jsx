@@ -61,7 +61,7 @@ export default function ScheduleFilterForm({ queries, onFilter }) {
                 <div className="col-span-2 sm:col-span-1">
                     <label className="inline-flex text-sm font-medium text-gray-700 gap-1">
                         <ArrowUpCircleIcon width={18} />
-                        <span>Destinasi Tujuan</span>
+                        <span>Keberangkatan - Tujuan</span>
                     </label>
                     <div className="mt-1">
                         <DynamicSelect
