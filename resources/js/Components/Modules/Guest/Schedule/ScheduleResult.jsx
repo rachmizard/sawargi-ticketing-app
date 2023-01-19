@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/inertia-react";
 import { ScheduleCard } from "..";
 
-export default function ScheduleResult({ schedules = [] }) {
+export default function ScheduleResult({ schedules = [], onBooking }) {
     if (schedules.length === 0) {
         return (
             <div className="text-center py-8">
@@ -28,7 +28,11 @@ export default function ScheduleResult({ schedules = [] }) {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {schedules.map((schedule, key) => (
-                    <ScheduleCard key={key} schedule={schedule} />
+                    <ScheduleCard
+                        key={key}
+                        schedule={schedule}
+                        onBooking={onBooking}
+                    />
                 ))}
             </div>
         </div>

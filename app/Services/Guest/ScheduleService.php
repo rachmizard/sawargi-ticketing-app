@@ -77,4 +77,30 @@ class ScheduleService implements ScheduleRepository
 
         return [];
     }
+
+    /**
+     * Find schedule by id.
+     * @param  int  $id
+     * @return \App\Models\Schedule
+     */
+    public function findScheduleById($id)
+    {
+        return $this->model::with([
+            'destination.fromOutlet' => function ($query) {
+                $query->select('id', 'name', 'address');
+            },
+            'destination.toOutlet' => function ($query) {
+                $query->select('id', 'name', 'address');
+            },
+            'shuttle' => function ($query) {
+                $query->select('id', 'number_plate');
+            },
+        ])
+            ->withCount([
+                'seats as available_seats' => function ($query) {
+                    $query->vacant();
+                }
+            ])
+            ->findOrFail($id);
+    }
 }

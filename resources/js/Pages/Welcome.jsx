@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import { Head } from "@inertiajs/inertia-react";
+import { Inertia } from "@inertiajs/inertia";
 
 import {
     ScheduleEmpty,
@@ -8,7 +9,6 @@ import {
 } from "@/Components/Modules";
 
 import UserLayout from "@/Layouts/User";
-import { Inertia } from "@inertiajs/inertia";
 
 export default function Welcome(props) {
     const {
@@ -26,13 +26,25 @@ export default function Welcome(props) {
         });
     }
 
+    function onBooking(schedule) {
+        Inertia.get(route("booking.index"), {
+            scheduleId: schedule.id,
+            passenger: query.passenger,
+        });
+    }
+
     return (
         <UserLayout auth={auth}>
             <Head title="Welcome" />
             <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pb-8 bg-white mt-5 shadow-sm rounded-md">
                 <ScheduleFilterForm queries={query} onFilter={onFilter} />
 
-                {isSearching && <ScheduleResult schedules={schedules} />}
+                {isSearching && (
+                    <ScheduleResult
+                        onBooking={onBooking}
+                        schedules={schedules}
+                    />
+                )}
                 {!isSearching && <ScheduleEmpty />}
             </div>
         </UserLayout>

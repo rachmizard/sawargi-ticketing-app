@@ -12,4 +12,11 @@ interface ScheduleRepository
      * @return array
      */
     public function query(Request $request);
+
+    /**
+     * Find schedule by id.
+     * @param  int  $id
+     * @return \App\Models\Schedule
+     */
+    public function findScheduleById($id);
 }

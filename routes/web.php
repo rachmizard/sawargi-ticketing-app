@@ -24,12 +24,7 @@ Route::middleware(['role:user'])->group(function () {
 
     Route::resource('/booking', BookingController::class)->names([
         'index' => 'booking.index',
-        'book' => 'booking.create',
         'store' => 'booking.store',
-        'show' => 'booking.show',
-        'edit' => 'booking.edit',
-        'update' => 'booking.update',
-        'destroy' => 'booking.destroy',
     ]);
 });
 

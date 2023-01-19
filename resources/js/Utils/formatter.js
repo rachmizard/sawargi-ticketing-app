@@ -5,3 +5,7 @@ export const formatRupiah = (value) => {
         minimumFractionDigits: 0,
     }).format(value);
 };
+
+export const formatDate = (value, { locale = "id-ID", options }) => {
+    return new Intl.DateTimeFormat(locale, options).format(value);
+};

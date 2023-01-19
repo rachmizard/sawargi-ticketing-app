@@ -11,23 +11,29 @@ export default function AlertCard({
     isOpen,
     variant = "info",
     title,
+    infinite = false,
     children,
 }) {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
-        if (!isOpen) {
-            setShow(false);
+        if (infinite) {
+            setShow(true);
             return;
+        } else {
+            if (!isOpen) {
+                setShow(false);
+                return;
+            }
+
+            setShow(true);
+
+            const timeout = setTimeout(() => {
+                setShow(false);
+            }, 5000);
+
+            return () => clearTimeout(timeout);
         }
-
-        setShow(true);
-
-        const timeout = setTimeout(() => {
-            setShow(false);
-        }, 5000);
-
-        return () => clearTimeout(timeout);
     }, [isOpen]);
 
     const variants = {

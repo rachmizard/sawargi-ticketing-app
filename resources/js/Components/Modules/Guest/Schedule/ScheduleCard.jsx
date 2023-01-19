@@ -7,7 +7,7 @@ const formatDepartureDateToTime = (date) => {
     return format(date, "hh:mm a");
 };
 
-export default function ScheduleCard({ schedule = {} }) {
+export default function ScheduleCard({ schedule = {}, onBooking }) {
     const { price, destination, departure_date, available_seats } =
         schedule || {};
 
@@ -42,7 +42,12 @@ export default function ScheduleCard({ schedule = {} }) {
                             {formatRupiah(price)}
                         </span>
 
-                        <Button size="sm" variant="outline" colorScheme="blue">
+                        <Button
+                            onClick={() => onBooking(schedule)}
+                            size="sm"
+                            variant="outline"
+                            colorScheme="blue"
+                        >
                             Pesan
                         </Button>
                     </div>
