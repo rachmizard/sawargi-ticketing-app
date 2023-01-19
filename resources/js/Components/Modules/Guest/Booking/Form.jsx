@@ -2,9 +2,11 @@
 import { useState } from "react";
 import {
     ArrowLeftIcon,
+    CheckIcon,
     EnvelopeIcon,
     MapPinIcon,
     PhoneIcon,
+    RectangleStackIcon,
     UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
@@ -23,7 +25,8 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
         phone: defaultValues?.phone || "",
         email: defaultValues?.email || "",
         address: defaultValues?.address || "",
-        passengerNames: [],
+        passangers: [],
+        seat_id: "",
     });
 
     const handleChange = (e) => {
@@ -37,9 +40,7 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
         post(route("booking.store"), {
             data: {
                 ...data,
-                passengerNames: data.passengerNames.filter(
-                    (name) => name !== null
-                ),
+                passangers: data.passangers.filter((name) => name !== null),
                 schedule_id: query?.scheduleId,
             },
             preserveState: true,
@@ -67,7 +68,7 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
                                     data.phone === "" ||
                                     data.email === "" ||
                                     data.address === "" ||
-                                    data.passengerNames?.length === 0
+                                    data.passangers?.length === 0
                                 ) {
                                     return false;
                                 }
@@ -77,9 +78,14 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
                         },
                         {
                             label: "Pilih Kursi",
-                            component: <p>Helo</p>,
+                            component: (
+                                <BookingFormSeat
+                                    data={data}
+                                    setData={setData}
+                                />
+                            ),
                             validate: () => {
-                                return true;
+                                return data.seat_id !== "";
                             },
                         },
                     ]}
@@ -92,10 +98,10 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
 function BookingFormIdentity({ data, setData, handleChange, passengerCount }) {
     const handleChangePassenger = (e) => {
         const { value, name } = e.target;
-        const passengerNames = [...data.passengerNames];
+        const passangers = [...data.passangers];
         const index = name.split("[")[1].split("]")[0];
-        passengerNames[index] = value;
-        setData("passengerNames", passengerNames);
+        passangers[index] = value;
+        setData("passangers", passangers);
     };
 
     const mapPassengerInputs = Array.from(Array(passengerCount).keys()).map(
@@ -110,10 +116,10 @@ function BookingFormIdentity({ data, setData, handleChange, passengerCount }) {
                 </label>
                 <Input
                     id={`passenger-${index}`}
-                    name={`passengerNames[${index}]`}
+                    name={`passangers[${index}]`}
                     placeholder={`Nama Penumpang ${index + 1}`}
                     className="w-full"
-                    value={data.passengerNames[index] ?? ""}
+                    value={data.passangers[index] ?? ""}
                     handleChange={handleChangePassenger}
                 />
             </div>
@@ -205,6 +211,7 @@ function BookingFormIdentity({ data, setData, handleChange, passengerCount }) {
 function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
     const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
     const [errors, setErrors] = useState([]);
+    const [valids, setValids] = useState([]);
 
     const handleStepClick = (index) => {
         const { validate } = steps[index - 1] || {};
@@ -213,11 +220,15 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
                 return;
             }
 
+            setValids(valids.filter((valid) => valid !== index - 1));
+
             setErrors([...errors, index - 1]);
             return;
         }
 
         setErrors(errors.filter((error) => error !== index - 1));
+
+        setValids([...valids, index - 1]);
 
         setActiveIndex(index);
         onChange && onChange(index);
@@ -228,12 +239,14 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
             base: "flex flex-col flex-shrink-0 items-center justify-center w-10 h-10 rounded-full",
             active: "bg-blue-400",
             inactive: "bg-gray-400",
+            valid: "bg-green-400",
             error: "bg-red-600",
         },
         counterLabel: {
             base: "font-semibold",
             active: "text-blue-400",
             inactive: "text-gray-400",
+            valid: "text-green-400",
             error: "text-red-600",
         },
     };
@@ -243,6 +256,10 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
 
         if (errors.includes(index)) {
             return `${baseClass} ${classNames.counterWrapper.error}`;
+        }
+
+        if (valids.includes(index)) {
+            return `${baseClass} ${classNames.counterWrapper.valid}`;
         }
 
         if (activeIndex === index) {
@@ -259,6 +276,10 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
             return `${baseClass} ${classNames.counterLabel.error}`;
         }
 
+        if (valids.includes(index)) {
+            return `${baseClass} ${classNames.counterLabel.valid}`;
+        }
+
         if (activeIndex === index) {
             return `${baseClass} ${classNames.counterLabel.active}`;
         }
@@ -268,7 +289,7 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
 
     return (
         <div className="max-w-full">
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 sm:gap-10">
                 {steps.map((step, key) => (
                     <div
                         key={key}
@@ -282,9 +303,13 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
                         className="flex items-center gap-2 cursor-pointer :focus:outline-none :focus:ring-2 :focus:ring-blue-400"
                     >
                         <div className={getCounterWrapperClass(key)}>
-                            <span className="text-white font-bold text-center text-xl">
-                                {key + 1}
-                            </span>
+                            {valids.includes(key) ? (
+                                <CheckIcon className="text-white h-6" />
+                            ) : (
+                                <span className="text-white font-bold text-center text-xl">
+                                    {key + 1}
+                                </span>
+                            )}
                         </div>
 
                         <span
@@ -305,12 +330,12 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
                 </div>
             )}
 
-            <div className="mt-8">{steps[activeIndex].component}</div>
+            <div className="mt-8">{steps && steps[activeIndex].component}</div>
 
             <div className="flex justify-end gap-4 mt-8">
                 <Button
                     type="button"
-                    colorScheme="gray"
+                    colorScheme="blue"
                     disabled={activeIndex === 0}
                     onClick={() => {
                         activeIndex !== 0 && handleStepClick(activeIndex - 1);
@@ -335,7 +360,141 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
                         <ArrowRightIcon width={18} />
                     </Button>
                 )}
+
+                {activeIndex === steps.length - 1 && (
+                    <Button
+                        type="submit"
+                        colorScheme="green"
+                        className="gap-2 font-semibold"
+                    >
+                        <span>Pesan</span>
+                    </Button>
+                )}
             </div>
+        </div>
+    );
+}
+
+function BookingFormSeat({ data, setData }) {
+    const { schedule } = usePage().props;
+    const { seats = [] } = schedule || {};
+
+    return (
+        <div className="">
+            <div className="max-w-full sm:max-w-xl mx-auto">
+                <h1 className="text-2xl text-gray-500 text-center font-semibold leading-loose tracking-tighter">
+                    Indikator Warna
+                </h1>
+                <div className="grid grid-cols-1 justify-items-start sm:grid-cols-3 sm:justify-items-center gap-4 mt-4">
+                    <div className="flex gap-2 items-center">
+                        <div className="bg-yellow-500 w-8 h-8 rounded-lg"></div>
+                        <p className="">Sudah dipesan</p>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                        <div className="bg-sky-500 w-8 h-8 rounded-lg"></div>
+                        <p className="">Kursi pilihan anda</p>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                        <div className="bg-gray-100 w-8 h-8 rounded-lg"></div>
+                        <p className="">Belum dipilih</p>
+                    </div>
+                </div>
+            </div>
+            <div className="max-w-sm mx-auto py-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3">
+                    {seats.map((seat, key) => {
+                        return (
+                            <SeatCard
+                                key={key}
+                                selectedSeatNumber={data.seat_id}
+                                seat={seat}
+                                onChange={(seatNumber) =>
+                                    setData("seat_id", seatNumber)
+                                }
+                            />
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function SeatCard({ selectedSeatNumber, seat, onChange }) {
+    const isBooked = seat.status === "booked";
+
+    const classNames = {
+        wrapper: {
+            base: "group flex justify-center items-center p-3 rounded-lg flex-col transition-all ease-out duration-100",
+            unselected: "bg-gray-100 hover:bg-sky-500",
+            selected: "bg-sky-500",
+            booked: "bg-yellow-500 cursor-not-allowed",
+        },
+        icon: {
+            base: "h-10",
+            unselected: "text-gray-700 group-hover:text-white",
+            selected: "text-white",
+            booked: "text-white",
+        },
+        label: {
+            base: "font-bold",
+            unselected: "text-gray-700 group-hover:text-white",
+            selected: "text-white",
+            booked: "text-white",
+        },
+    };
+
+    const getWrapperClass = () => {
+        const baseClass = classNames.wrapper.base;
+
+        if (isBooked) {
+            return `${baseClass} ${classNames.wrapper.booked}`;
+        }
+
+        if (seat.id === selectedSeatNumber) {
+            return `${baseClass} ${classNames.wrapper.selected}`;
+        }
+
+        return `${baseClass} ${classNames.wrapper.unselected}`;
+    };
+
+    const getIconClass = () => {
+        const baseClass = classNames.icon.base;
+
+        if (isBooked) {
+            return `${baseClass} ${classNames.icon.booked}`;
+        }
+
+        if (seat.id === selectedSeatNumber) {
+            return `${baseClass} ${classNames.icon.selected}`;
+        }
+
+        return `${baseClass} ${classNames.icon.unselected}`;
+    };
+
+    const getLabelClass = () => {
+        const baseClass = classNames.label.base;
+
+        if (isBooked) {
+            return `${baseClass} ${classNames.label.booked}`;
+        }
+
+        if (seat.id === selectedSeatNumber) {
+            return `${baseClass} ${classNames.label.selected}`;
+        }
+
+        return `${baseClass} ${classNames.label.unselected}`;
+    };
+
+    return (
+        <div
+            role="button"
+            tabIndex={0}
+            onClick={() => !isBooked && onChange(seat?.id)}
+            className={getWrapperClass()}
+        >
+            <RectangleStackIcon className={getIconClass()} />
+            <span className={getLabelClass()}>{seat.seat_number}</span>
         </div>
     );
 }

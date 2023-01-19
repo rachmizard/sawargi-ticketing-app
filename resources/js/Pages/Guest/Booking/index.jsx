@@ -8,12 +8,15 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { AlertCard } from "@/Components";
-import UserLayout from "@/Layouts/User";
-import { formatDate } from "@/Utils/formatter";
 import { BookingForm, BookingInformationCard } from "@/Components/Modules";
+import UserLayout from "@/Layouts/User";
+
+import { formatDate } from "@/Utils/formatter";
 
 export default function BookingPage({ auth, schedule, ziggy: { query } }) {
     const { destination, departure_date, arrival_date } = schedule || {};
+
+    console.log("schedule", schedule);
 
     const departureDate = formatDate(Date.parse(departure_date), {
         locale: "id-ID",

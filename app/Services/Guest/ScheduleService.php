@@ -95,6 +95,9 @@ class ScheduleService implements ScheduleRepository
             'shuttle' => function ($query) {
                 $query->select('id', 'number_plate');
             },
+            'seats' => function ($query) {
+                $query->select('id', 'schedule_id', 'seat_number', 'status');
+            },
         ])
             ->withCount([
                 'seats as available_seats' => function ($query) {
