@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { useState } from "react";
 import {
     ArrowLeftIcon,
@@ -14,19 +13,21 @@ import { useForm, usePage } from "@inertiajs/inertia-react";
 
 import Button from "@/Components/Button";
 import Input from "@/Components/Input";
+import ValidationErrors from "@/Components/ValidationErrors";
 
 export default function BookingForm({ defaultValues, passengerCount = 0 }) {
     const {
         ziggy: { query },
     } = usePage().props;
 
-    const { data, setData, post } = useForm("BookingForm", {
+    const { data, setData, post, errors } = useForm("BookingForm", {
         name: defaultValues?.name || "",
         phone: defaultValues?.phone || "",
         email: defaultValues?.email || "",
         address: defaultValues?.address || "",
-        passangers: [],
-        seat_id: "",
+        passengers: [],
+        seat_ids: [],
+        schedule_id: query?.scheduleId,
     });
 
     const handleChange = (e) => {
@@ -37,18 +38,15 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // eslint-disable-next-line no-undef
         post(route("booking.store"), {
-            data: {
-                ...data,
-                passangers: data.passangers.filter((name) => name !== null),
-                schedule_id: query?.scheduleId,
-            },
             preserveState: true,
         });
     };
 
     return (
         <div className="mt-8 space-y-4">
+            <ValidationErrors errors={errors} />
             <form onSubmit={handleSubmit}>
                 <Stepper
                     steps={[
@@ -68,7 +66,7 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
                                     data.phone === "" ||
                                     data.email === "" ||
                                     data.address === "" ||
-                                    data.passangers?.length === 0
+                                    data.passengers?.length === 0
                                 ) {
                                     return false;
                                 }
@@ -82,10 +80,11 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
                                 <BookingFormSeat
                                     data={data}
                                     setData={setData}
+                                    passengerCount={passengerCount}
                                 />
                             ),
                             validate: () => {
-                                return data.seat_id !== "";
+                                return data.seat_ids?.length >= passengerCount;
                             },
                         },
                     ]}
@@ -96,12 +95,14 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
 }
 
 function BookingFormIdentity({ data, setData, handleChange, passengerCount }) {
+    const [orderIsPassenger, setOrderIsPassenger] = useState(false);
+
     const handleChangePassenger = (e) => {
         const { value, name } = e.target;
-        const passangers = [...data.passangers];
+        const passengers = [...data.passengers];
         const index = name.split("[")[1].split("]")[0];
-        passangers[index] = value;
-        setData("passangers", passangers);
+        passengers[index] = value;
+        setData("passengers", passengers);
     };
 
     const mapPassengerInputs = Array.from(Array(passengerCount).keys()).map(
@@ -116,10 +117,14 @@ function BookingFormIdentity({ data, setData, handleChange, passengerCount }) {
                 </label>
                 <Input
                     id={`passenger-${index}`}
-                    name={`passangers[${index}]`}
+                    name={`passengers[${index}]`}
                     placeholder={`Nama Penumpang ${index + 1}`}
                     className="w-full"
-                    value={data.passangers[index] ?? ""}
+                    value={
+                        data?.passengers?.length > 0
+                            ? data.passengers[index]
+                            : ""
+                    }
                     handleChange={handleChangePassenger}
                 />
             </div>
@@ -202,6 +207,30 @@ function BookingFormIdentity({ data, setData, handleChange, passengerCount }) {
                         value={data.address}
                         handleChange={handleChange}
                     />
+                </div>
+
+                <div className="flex gap-2">
+                    <input
+                        id="order"
+                        type="checkbox"
+                        className="form-checkbox h-5 w-5 text-blue-500 focus:ring-blue-500 border-gray-300 rounded transition duration-300 ease-in-out"
+                        checked={orderIsPassenger}
+                        onChange={(e) => {
+                            setOrderIsPassenger(e.target.checked);
+                            if (e.target.checked) {
+                                setData("passengers", [data.name]);
+                            } else {
+                                setData("passengers", []);
+                            }
+                        }}
+                    />
+
+                    <label
+                        className="inline-flex space-x-1 text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="order"
+                    >
+                        <span>Pemesan adalah penumpang</span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -375,9 +404,36 @@ function Stepper({ steps = [], defaultActiveIndex = 0, onChange }) {
     );
 }
 
-function BookingFormSeat({ data, setData }) {
+function BookingFormSeat({ data, setData, passengerCount = 0 }) {
     const { schedule } = usePage().props;
     const { seats = [] } = schedule || {};
+
+    const handleSeatClick = (seatNumber) => {
+        if (data.seat_ids.length >= passengerCount) {
+            if (data.seat_ids.includes(seatNumber)) {
+                setData({
+                    ...data,
+                    seat_ids: data.seat_ids.filter(
+                        (seat) => seat !== seatNumber
+                    ),
+                });
+            }
+
+            return;
+        }
+
+        if (data.seat_ids.includes(seatNumber)) {
+            setData({
+                ...data,
+                seat_ids: data.seat_ids.filter((seat) => seat !== seatNumber),
+            });
+        } else {
+            setData({
+                ...data,
+                seat_ids: [...data.seat_ids, seatNumber],
+            });
+        }
+    };
 
     return (
         <div className="">
@@ -399,6 +455,13 @@ function BookingFormSeat({ data, setData }) {
                         <p className="">Belum dipilih</p>
                     </div>
                 </div>
+
+                <div className="flex flex-col items-center justify-center mt-4">
+                    <h1 className="text-lg text-gray-500 tracking-tighter leading-loose">
+                        Pilih {passengerCount} kursi penumpang yang tersedia
+                        dibawah ini
+                    </h1>
+                </div>
             </div>
             <div className="max-w-sm mx-auto py-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3">
@@ -406,11 +469,10 @@ function BookingFormSeat({ data, setData }) {
                         return (
                             <SeatCard
                                 key={key}
-                                selectedSeatNumber={data.seat_id}
+                                selectedSeatIds={data.seat_ids}
                                 seat={seat}
-                                onChange={(seatNumber) =>
-                                    setData("seat_id", seatNumber)
-                                }
+                                passengerCount={passengerCount}
+                                onChange={handleSeatClick}
                             />
                         );
                     })}
@@ -420,27 +482,36 @@ function BookingFormSeat({ data, setData }) {
     );
 }
 
-function SeatCard({ selectedSeatNumber, seat, onChange }) {
+function SeatCard({
+    selectedSeatIds = [],
+    seat,
+    passengerCount = 0,
+    onChange,
+}) {
     const isBooked = seat.status === "booked";
+    const isNotEligibleSelected = selectedSeatIds.length >= passengerCount;
 
     const classNames = {
         wrapper: {
             base: "group flex justify-center items-center p-3 rounded-lg flex-col transition-all ease-out duration-100",
-            unselected: "bg-gray-100 hover:bg-sky-500",
+            unselected: "bg-gray-100 active:scale-90",
             selected: "bg-sky-500",
             booked: "bg-yellow-500 cursor-not-allowed",
+            unavailable: "bg-slate-300 opacity-50 cursor-not-allowed",
         },
         icon: {
             base: "h-10",
-            unselected: "text-gray-700 group-hover:text-white",
+            unselected: "text-gray-700",
             selected: "text-white",
             booked: "text-white",
+            unavailable: "text-gray-700",
         },
         label: {
             base: "font-bold",
-            unselected: "text-gray-700 group-hover:text-white",
+            unselected: "text-gray-700",
             selected: "text-white",
             booked: "text-white",
+            unavailable: "text-gray-700",
         },
     };
 
@@ -451,7 +522,11 @@ function SeatCard({ selectedSeatNumber, seat, onChange }) {
             return `${baseClass} ${classNames.wrapper.booked}`;
         }
 
-        if (seat.id === selectedSeatNumber) {
+        if (isNotEligibleSelected && !selectedSeatIds.includes(seat.id)) {
+            return `${baseClass} ${classNames.wrapper.unavailable}`;
+        }
+
+        if (selectedSeatIds.includes(seat.id)) {
             return `${baseClass} ${classNames.wrapper.selected}`;
         }
 
@@ -465,7 +540,11 @@ function SeatCard({ selectedSeatNumber, seat, onChange }) {
             return `${baseClass} ${classNames.icon.booked}`;
         }
 
-        if (seat.id === selectedSeatNumber) {
+        if (isNotEligibleSelected && !selectedSeatIds.includes(seat.id)) {
+            return `${baseClass} ${classNames.icon.unavailable}`;
+        }
+
+        if (selectedSeatIds.includes(seat.id)) {
             return `${baseClass} ${classNames.icon.selected}`;
         }
 
@@ -479,7 +558,11 @@ function SeatCard({ selectedSeatNumber, seat, onChange }) {
             return `${baseClass} ${classNames.label.booked}`;
         }
 
-        if (seat.id === selectedSeatNumber) {
+        if (isNotEligibleSelected && !selectedSeatIds.includes(seat.id)) {
+            return `${baseClass} ${classNames.label.unavailable}`;
+        }
+
+        if (selectedSeatIds.includes(seat.id)) {
             return `${baseClass} ${classNames.label.selected}`;
         }
 
@@ -490,7 +573,16 @@ function SeatCard({ selectedSeatNumber, seat, onChange }) {
         <div
             role="button"
             tabIndex={0}
-            onClick={() => !isBooked && onChange(seat?.id)}
+            aria-disabled="true"
+            onClick={() => {
+                if (
+                    !isBooked ||
+                    (selectedSeatIds.includes(seat.id) &&
+                        !isNotEligibleSelected)
+                ) {
+                    onChange(seat.id);
+                }
+            }}
             className={getWrapperClass()}
         >
             <RectangleStackIcon className={getIconClass()} />

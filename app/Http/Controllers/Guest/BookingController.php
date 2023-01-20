@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Guest\Booking\StoreBookingRequest;
+use App\Services\Guest\BookingService;
 use App\Services\Guest\ScheduleService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,8 +23,14 @@ class BookingController extends Controller
         ]);
     }
 
-    public function store(Request $request, ScheduleService $schedule)
+    public function store(StoreBookingRequest $request, BookingService $booking)
     {
-        dd($request->all());
+        try {
+            $booking->storeBooking($request);
+
+            return redirect()->route('welcome');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Booking failed please try again later or call some administrator.');
+        }
     }
 }

@@ -13,11 +13,11 @@ class Booking extends Model
     protected $fillable = [
         'schedule_id',
         'user_id',
+        'seat_id',
         'name',
         'email',
         'phone',
         'address',
-        'seat_number',
         'status',
     ];
 
@@ -29,6 +29,11 @@ class Booking extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function seat()
+    {
+        return $this->belongsTo(Seat::class, 'seat_id', 'id');
     }
 
     public function scopeVacant($query)
