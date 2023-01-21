@@ -22,6 +22,10 @@ Route::middleware(['role:user'])->group(function () {
 
     Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
+    Route::prefix('/booking')->group(function () {
+        Route::get('/payment', [BookingController::class, 'payment'])->name('booking.payment');
+    });
+
     Route::resource('/booking', BookingController::class)->names([
         'index' => 'booking.index',
         'store' => 'booking.store',

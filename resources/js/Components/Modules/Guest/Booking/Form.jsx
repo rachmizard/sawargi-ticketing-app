@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { useForm, usePage } from "@inertiajs/inertia-react";
+import { Inertia } from "@inertiajs/inertia";
 
 import Button from "@/Components/Button";
 import Input from "@/Components/Input";
@@ -41,6 +42,10 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
         // eslint-disable-next-line no-undef
         post(route("booking.store"), {
             preserveState: true,
+            onSuccess: () => {
+                // eslint-disable-next-line no-undef
+                Inertia.replace(route("booking.payment"));
+            },
         });
     };
 

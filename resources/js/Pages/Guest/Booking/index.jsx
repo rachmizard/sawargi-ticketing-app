@@ -13,10 +13,13 @@ import UserLayout from "@/Layouts/User";
 
 import { formatDate } from "@/Utils/formatter";
 
-export default function BookingPage({ auth, schedule, ziggy: { query } }) {
+export default function BookingPage({
+    auth,
+    schedule,
+    ziggy: { query },
+    flash,
+}) {
     const { destination, departure_date, arrival_date } = schedule || {};
-
-    console.log("schedule", schedule);
 
     const departureDate = formatDate(Date.parse(departure_date), {
         locale: "id-ID",
@@ -134,10 +137,8 @@ export default function BookingPage({ auth, schedule, ziggy: { query } }) {
                 </div>
 
                 <div className="mt-10">
-                    <AlertCard isOpen infinite>
-                        <p className="text-gray-700">
-                            Mohon isi data diri anda terlebih dahulu.
-                        </p>
+                    <AlertCard variant="danger" isOpen={!!flash?.error}>
+                        <p className="text-gray-700">{flash?.error}</p>
                     </AlertCard>
 
                     <div className="mt-4">

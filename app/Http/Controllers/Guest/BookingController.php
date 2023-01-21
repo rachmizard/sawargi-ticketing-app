@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Guest\Booking\StoreBookingRequest;
 use App\Services\Guest\BookingService;
 use App\Services\Guest\ScheduleService;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class BookingController extends Controller
@@ -27,10 +29,18 @@ class BookingController extends Controller
     {
         try {
             $booking->storeBooking($request);
-
-            return redirect()->route('welcome');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Booking failed please try again later or call some administrator.');
+            return Redirect::back()->with('error', 'Booking failed please try again later or call some administrator.');
         }
+    }
+
+    public function show($id)
+    {
+        //
+    }
+
+    public function payment(Request $request)
+    {
+        return Inertia::render('Guest/Booking/Payment');
     }
 }

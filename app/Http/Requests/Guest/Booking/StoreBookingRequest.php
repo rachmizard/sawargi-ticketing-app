@@ -32,7 +32,7 @@ class StoreBookingRequest extends FormRequest
             'address' => 'required|string',
             'passengers' => 'required|array|min:1',
             'seat_ids' => 'required|array|exists:seats,id',
-            'seat_ids' => function ($attribute, $value, $fail) {
+            'seat_id.*' => function ($attribute, $value, $fail) {
                 if (count($this->passengers) !== count($value)) {
                     $fail('Seat count is not equal to passenger count.');
                 }

@@ -36,30 +36,24 @@ class BookingService implements BookingRepository
 
 
             foreach ($passengers as $key => $passenger) {
+                $data = [
+                    'schedule_id' => $payload['schedule_id'],
+                    'seat_id' => $seat_ids[$key],
+                    'email' => $payload['email'],
+                    'phone' => $payload['phone'],
+                    'address' => $payload['address'],
+                ];
+
+                if (Auth::check()) {
+                    $data['user_id'] = Auth::id();
+                }
+
                 if ($key === 0) {
-                    $data = [
-                        'schedule_id' => $payload['schedule_id'],
-                        'seat_id' => $seat_ids[$key],
-                        'name' => $payload['name'],
-                        'email' => $payload['email'],
-                        'phone' => $payload['phone'],
-                        'address' => $payload['address'],
-                    ];
-
-                    if (Auth::check()) {
-                        $data['user_id'] = Auth::id();
-                    }
-
+                    $data['name'] = $payload['name'];
                     $this->model::create($data);
                 } else {
-                    $this->model::create([
-                        'schedule_id' => $payload['schedule_id'],
-                        'seat_id' => $seat_ids[$key],
-                        'name' => $passenger,
-                        'email' => $payload['email'],
-                        'phone' => $payload['phone'],
-                        'address' => $payload['address'],
-                    ]);
+                    $data['name'] = $passenger;
+                    $this->model::create($data);
                 }
             }
 
