@@ -23,7 +23,7 @@ class BookingService implements BookingRepository
     /**
      * Store booking to database.
      * @param  \App\Http\Requests\Guest\Booking\StoreBookingRequest  $request
-     * @return bool
+     * @return Booking
      */
     public function storeBooking(StoreBookingRequest $request)
     {
@@ -34,31 +34,42 @@ class BookingService implements BookingRepository
             $passengers = $payload['passengers'];
             $seat_ids = $payload['seat_ids'];
 
+            $data = [
+                'schedule_id' => $payload['schedule_id'],
+                'email' => $payload['email'],
+                'phone' => $payload['phone'],
+                'name' => $payload['name'],
+                'address' => $payload['address'],
+            ];
+
+            if (Auth::check()) {
+                $data['user_id'] = Auth::id();
+            }
+
+            $booking = $this->model::create($data);
 
             foreach ($passengers as $key => $passenger) {
-                $data = [
-                    'schedule_id' => $payload['schedule_id'],
+                $booking_seat_data = [
+                    'booking_id' => $booking->id,
                     'seat_id' => $seat_ids[$key],
                     'email' => $payload['email'],
                     'phone' => $payload['phone'],
-                    'address' => $payload['address'],
+                    'name' => $key === 0 ? $payload['name'] : $passenger,
+                    'price' => $booking->schedule->price ?? 0,
                 ];
 
                 if (Auth::check()) {
-                    $data['user_id'] = Auth::id();
+                    $booking_seat_data['user_id'] = Auth::id();
                 }
 
-                if ($key === 0) {
-                    $data['name'] = $payload['name'];
-                    $this->model::create($data);
-                } else {
-                    $data['name'] = $passenger;
-                    $this->model::create($data);
-                }
+                $booking->bookingSeats()->create($booking_seat_data);
             }
 
+            $booking->calculateTotalPriceAndSave();
 
             DB::commit();
+
+            return $booking;
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

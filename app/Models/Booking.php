@@ -13,12 +13,12 @@ class Booking extends Model
     protected $fillable = [
         'schedule_id',
         'user_id',
-        'seat_id',
         'name',
         'email',
         'phone',
         'address',
         'status',
+        'total_price'
     ];
 
     public function schedule()
@@ -31,18 +31,33 @@ class Booking extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function seat()
+    public function bookingSeats()
     {
-        return $this->belongsTo(Seat::class, 'seat_id', 'id');
+        return $this->hasMany(BookingSeat::class, 'booking_id', 'id');
     }
 
-    public function scopeVacant($query)
+    public function scopeCompleted($query)
     {
-        return $query->where('status', 'vacant');
+        return $query->where('status', 'completed');
     }
 
-    public function scopeBooked($query)
+    public function scopePending($query)
     {
-        return $query->where('status', 'booked');
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeCancelled($query)
+    {
+        return $query->where('status', 'cancelled');
+    }
+
+    public function calculateTotalPriceAndSave()
+    {
+        $totalPrice = 0;
+        foreach ($this->bookingSeats as $bookingSeat) {
+            $totalPrice += $bookingSeat->price;
+        }
+        $this->total_price = $totalPrice;
+        $this->save();
     }
 }
