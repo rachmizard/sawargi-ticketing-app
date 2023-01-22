@@ -7,8 +7,6 @@ export default function BookingFormPayment() {
     const { data, handleChange } = useBookingFormContext();
     const { schedule } = usePage().props;
 
-    console.log("schedule", schedule);
-
     const isCash = data.payment_method === "cash";
     const isTransfer = data.payment_method === "transfer";
     const price = formatRupiah(schedule.price * data.passengers?.length ?? 0);
