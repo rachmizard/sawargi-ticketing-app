@@ -16,8 +16,13 @@ class BookingService implements BookingRepository
      * Create a new service instance.
      * @param Booking  $model
      */
-    public function __construct(private $model = Booking::class)
+    public function __construct(public $model = Booking::class)
     {
+    }
+
+    public function __invoke()
+    {
+        return $this;
     }
 
     /**
@@ -80,5 +85,21 @@ class BookingService implements BookingRepository
             DB::rollBack();
             throw $th;
         }
+    }
+
+    /**
+     * Find booking by id.
+     * @param  int  $id
+     * @return object $booking
+     */
+    public function findBookingByIdAndStatusIsPending($id)
+    {
+        return $this->model::with(
+            'bookingSeats.seat',
+            'bookingPayments'
+        )
+            ->whereId($id)
+            ->pending()
+            ->first();
     }
 }
