@@ -29,6 +29,8 @@ class BookingController extends Controller
     {
         try {
             $booking->storeBooking($request);
+
+            return Redirect::route('booking.payment')->with('success', 'Booking berhasil, silahkan lakukan pembayaran.');
         } catch (\Throwable $th) {
             return Redirect::back()->with('error', 'Booking failed please try again later or call some administrator.');
         }
