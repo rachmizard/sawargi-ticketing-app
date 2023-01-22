@@ -36,6 +36,11 @@ class Booking extends Model
         return $this->hasMany(BookingSeat::class, 'booking_id', 'id');
     }
 
+    public function bookingPayments()
+    {
+        return $this->hasMany(BookingPayment::class, 'booking_id', 'id');
+    }
+
     public function scopeCompleted($query)
     {
         return $query->where('status', 'completed');

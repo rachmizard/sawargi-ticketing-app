@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Guest\Booking;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class StoreBookingRequest extends FormRequest
 {
@@ -37,6 +36,7 @@ class StoreBookingRequest extends FormRequest
                     $fail('Seat count is not equal to passenger count.');
                 }
             },
+            "payment_method" => "required|string|in:cash,transfer",
         ];
     }
 }

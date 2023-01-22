@@ -67,6 +67,12 @@ class BookingService implements BookingRepository
 
             $booking->calculateTotalPriceAndSave();
 
+            $booking->bookingPayments()->create([
+                'method' => $payload['payment_method'],
+                'status' => 'pending',
+                'expired_at' => now()->addMinutes(30),
+            ]);
+
             DB::commit();
 
             return $booking;
