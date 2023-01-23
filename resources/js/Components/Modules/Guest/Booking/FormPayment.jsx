@@ -1,15 +1,24 @@
 import AlertCard from "@/Components/AlertCard";
 import { formatRupiah } from "@/Utils/formatter";
 import { usePage } from "@inertiajs/inertia-react";
-import { useBookingFormContext } from "./BookingContext";
+import { Controller, useWatch } from "react-hook-form";
 
 export default function BookingFormPayment() {
-    const { data, handleChange } = useBookingFormContext();
     const { schedule } = usePage().props;
 
-    const isCash = data.payment_method === "cash";
-    const isTransfer = data.payment_method === "transfer";
-    const price = formatRupiah(schedule.price * data.passengers?.length ?? 0);
+    const passengers = useWatch({
+        name: "passengers",
+        defaultValue: [],
+    });
+
+    const paymentMethod = useWatch({
+        name: "payment_method",
+        defaultValue: "cash",
+    });
+
+    const isCash = paymentMethod === "cash";
+    const isTransfer = paymentMethod === "transfer";
+    const price = formatRupiah(schedule.price * passengers?.length ?? 0);
 
     return (
         <div className="flex flex-col">
@@ -39,9 +48,9 @@ export default function BookingFormPayment() {
                     dengan nominal{" "}
                     <span className="font-bold leading-loose">
                         {price} (
-                        {`${
-                            data.passengers?.length ?? 0
-                        } Penumpang * ${formatRupiah(schedule.price)}  `}
+                        {`${passengers?.length ?? 0} Penumpang * ${formatRupiah(
+                            schedule.price
+                        )}  `}
                         )
                     </span>
                     , dan sertakan bukti transfer di halaman selanjutnya.
@@ -53,13 +62,18 @@ export default function BookingFormPayment() {
                     Pilih Metode Pembayaran
                 </h1>
                 <div className="flex items-center space-x-2">
-                    <input
-                        id="cash"
-                        type="radio"
+                    <Controller
                         name="payment_method"
-                        value="cash"
-                        onChange={handleChange}
-                        checked={isCash}
+                        render={({ field }) => (
+                            <input
+                                id="cash"
+                                type="radio"
+                                name="payment_method"
+                                value="cash"
+                                onChange={field.onChange}
+                                checked={field.value === "cash"}
+                            />
+                        )}
                     />
                     <label
                         htmlFor="cash"
@@ -70,13 +84,18 @@ export default function BookingFormPayment() {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                    <input
-                        id="transfer"
+                    <Controller
                         name="payment_method"
-                        value="transfer"
-                        type="radio"
-                        onChange={handleChange}
-                        checked={isTransfer}
+                        render={({ field }) => (
+                            <input
+                                id="transfer"
+                                type="radio"
+                                name="payment_method"
+                                value="transfer"
+                                onChange={field.onChange}
+                                checked={field.value === "transfer"}
+                            />
+                        )}
                     />
                     <label
                         htmlFor="transfer"

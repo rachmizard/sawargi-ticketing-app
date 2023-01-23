@@ -58,6 +58,7 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
                         {
                             label: "Pembayaran",
                             component: <BookingFormPayment />,
+                            validate: ["payment_method"],
                         },
                     ]}
                 />

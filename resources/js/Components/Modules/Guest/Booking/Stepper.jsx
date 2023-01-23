@@ -13,24 +13,28 @@ export default function BookingStepper({
     defaultActiveIndex = 0,
     onChange,
 }) {
-    const { trigger } = useFormContext();
+    const { trigger, formState } = useFormContext();
     const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
     const [errorSteps, setErrorSteps] = useState([]);
     const [validSteps, setValidSteps] = useState([]);
 
     const handleStepClick = async (index) => {
-        const valid = await trigger(steps[activeIndex]?.validate, {
-            shouldFocus: true,
-        });
-
-        if (!valid) {
-            setErrorSteps((prev) => [...prev, activeIndex]);
-
-            setValidSteps((prev) => {
-                const valids = prev.filter((step) => step !== activeIndex);
-                return valids;
+        if (steps[index - 1]?.validate) {
+            const valid = await trigger(steps[index - 1]?.validate, {
+                shouldFocus: true,
             });
-            return;
+
+            if (typeof valid === "undefined") return;
+
+            if (!valid) {
+                setErrorSteps((prev) => [...prev, activeIndex]);
+
+                setValidSteps((prev) => {
+                    const valids = prev.filter((step) => step !== activeIndex);
+                    return valids;
+                });
+                return;
+            }
         }
 
         setValidSteps((prev) => [...prev, activeIndex]);
@@ -163,6 +167,7 @@ export default function BookingStepper({
                                 handleStepClick(activeIndex + 1);
                         }}
                         className="gap-2 font-semibold"
+                        disabled={!formState.isValid}
                     >
                         <span>Selanjutnya</span>
                         <ArrowRightIcon width={18} />

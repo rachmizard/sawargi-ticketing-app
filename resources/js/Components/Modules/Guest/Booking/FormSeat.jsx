@@ -1,39 +1,65 @@
 import { usePage } from "@inertiajs/inertia-react";
-import { useBookingFormContext } from "./BookingContext";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+
 import BookingSeatCard from "./SeatCard";
 
 export default function BookingFormSeat({ passengerCount = 0 }) {
     const { schedule } = usePage().props;
     const { seats = [] } = schedule || {};
 
-    const { data, setData } = useBookingFormContext();
+    const { setValue, formState } = useFormContext();
+
+    useFieldArray({
+        name: "seat_ids",
+        rules: {
+            minLength: {
+                message: `${passengerCount} kursi harus dipilih`,
+                value: passengerCount,
+            },
+            maxLength: {
+                message: `Maksimal ${passengerCount} kursi yang dapat dipilih`,
+                value: passengerCount,
+            },
+            required: "Silahkan pilih kursi terlebih dahulu",
+        },
+    });
+
+    const selectedSeatIds = useWatch({
+        name: "seat_ids",
+        defaultValue: [],
+    });
 
     const handleSeatClick = (seatNumber) => {
-        if (data.seat_ids.length >= passengerCount) {
-            if (data.seat_ids.includes(seatNumber)) {
-                setData({
-                    ...data,
-                    seat_ids: data.seat_ids.filter(
-                        (seat) => seat !== seatNumber
-                    ),
-                });
+        if (selectedSeatIds.length >= passengerCount) {
+            if (selectedSeatIds.includes(seatNumber)) {
+                setValue(
+                    "seat_ids",
+                    selectedSeatIds.filter((seat) => seat !== seatNumber),
+                    {
+                        shouldValidate: true,
+                    }
+                );
             }
 
             return;
         }
 
-        if (data.seat_ids.includes(seatNumber)) {
-            setData({
-                ...data,
-                seat_ids: data.seat_ids.filter((seat) => seat !== seatNumber),
-            });
+        if (selectedSeatIds.includes(seatNumber)) {
+            setValue(
+                "seat_ids",
+                selectedSeatIds.filter((seat) => seat !== seatNumber),
+                {
+                    shouldValidate: true,
+                }
+            );
         } else {
-            setData({
-                ...data,
-                seat_ids: [...data.seat_ids, seatNumber],
+            setValue("seat_ids", [...selectedSeatIds, seatNumber], {
+                shouldValidate: true,
             });
         }
     };
+
+    const errorSeatIds = formState?.errors?.seat_ids?.root?.message;
 
     return (
         <div className="">
@@ -57,7 +83,11 @@ export default function BookingFormSeat({ passengerCount = 0 }) {
                 </div>
 
                 <div className="flex flex-col items-center justify-center mt-4">
-                    <h1 className="text-lg text-gray-500 tracking-tighter leading-loose">
+                    <h1
+                        className={`text-lg ${
+                            errorSeatIds ? "text-red-500" : "text-gray-500"
+                        } tracking-tighter leading-loose`}
+                    >
                         Pilih {passengerCount} kursi penumpang yang tersedia
                         dibawah ini
                     </h1>
@@ -69,7 +99,7 @@ export default function BookingFormSeat({ passengerCount = 0 }) {
                         return (
                             <BookingSeatCard
                                 key={key}
-                                selectedSeatIds={data.seat_ids}
+                                selectedSeatIds={selectedSeatIds}
                                 seat={seat}
                                 passengerCount={passengerCount}
                                 onChange={handleSeatClick}

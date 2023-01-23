@@ -41,9 +41,10 @@ export default function BookingFormProvider({
 
     const handleSubmit = (values) => {
         // eslint-disable-next-line no-undef
-        Inertia.post(route("booking.store"), values, {
-            preserveState: true,
-        });
+        console.log("values", values);
+        // Inertia.post(route("booking.store"), values, {
+        //     preserveState: true,
+        // });
     };
 
     const value = useMemo(
