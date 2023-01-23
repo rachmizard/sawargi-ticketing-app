@@ -73,7 +73,10 @@ const ReactHookFormProvider = ({ children, defaultValues, ...options }) => {
     const { data } = useBookingFormContext();
 
     const methods = useReactHookForm({
-        defaultValues: data,
+        defaultValues: {
+            ...data,
+            ...defaultValues,
+        },
         ...options,
     });
 

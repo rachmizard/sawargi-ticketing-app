@@ -19,8 +19,7 @@ import { useBookingStepperContext } from "./Stepper";
 import { useBookingFormContext } from "./FormContext";
 
 export default function BookingFormIdentity({ passengerCount }) {
-    const { setValue, control, getValues, trigger, formState } =
-        useFormContext();
+    const { setValue, control, getValues, trigger } = useFormContext();
     const { setData } = useBookingFormContext();
     const { activeIndex, handleStepClick, steps } = useBookingStepperContext();
 
@@ -48,7 +47,7 @@ export default function BookingFormIdentity({ passengerCount }) {
             "phone",
             "email",
             "address",
-            "passangers",
+            "passengers",
         ]);
 
         if (!valid) return;
