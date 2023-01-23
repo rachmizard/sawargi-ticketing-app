@@ -4,37 +4,39 @@ import {
     ArrowRightIcon,
     CheckIcon,
 } from "@heroicons/react/24/outline";
+import { useFormContext } from "react-hook-form";
 
 import Button from "@/Components/Button";
-import { useBookingFormContext } from "./BookingContext";
 
 export default function BookingStepper({
     steps = [],
     defaultActiveIndex = 0,
     onChange,
 }) {
-    const { data } = useBookingFormContext();
-
+    const { trigger } = useFormContext();
     const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
-    const [errors, setErrors] = useState([]);
-    const [valids, setValids] = useState([]);
+    const [errorSteps, setErrorSteps] = useState([]);
+    const [validSteps, setValidSteps] = useState([]);
 
-    const handleStepClick = (index) => {
-        const { validate } = steps[index - 1] || {};
-        if (validate && !validate(data)) {
-            if (errors.includes(index - 1)) {
-                return;
-            }
+    const handleStepClick = async (index) => {
+        const valid = await trigger(steps[activeIndex]?.validate, {
+            shouldFocus: true,
+        });
 
-            setValids(valids.filter((valid) => valid !== index - 1));
+        if (!valid) {
+            setErrorSteps((prev) => [...prev, activeIndex]);
 
-            setErrors([...errors, index - 1]);
+            setValidSteps((prev) => {
+                const valids = prev.filter((step) => step !== activeIndex);
+                return valids;
+            });
             return;
         }
 
-        setErrors(errors.filter((error) => error !== index - 1));
-
-        setValids([...valids, index - 1]);
+        setValidSteps((prev) => [...prev, activeIndex]);
+        setErrorSteps((prev) => {
+            return prev.filter((step) => step !== activeIndex);
+        });
 
         setActiveIndex(index);
         onChange && onChange(index);
@@ -60,11 +62,11 @@ export default function BookingStepper({
     const getCounterWrapperClass = (index) => {
         const baseClass = classNames.counterWrapper.base;
 
-        if (errors.includes(index)) {
+        if (errorSteps.includes(index)) {
             return `${baseClass} ${classNames.counterWrapper.error}`;
         }
 
-        if (valids.includes(index)) {
+        if (validSteps.includes(index)) {
             return `${baseClass} ${classNames.counterWrapper.valid}`;
         }
 
@@ -78,11 +80,11 @@ export default function BookingStepper({
     const getCounterLabelClass = (index) => {
         const baseClass = classNames.counterLabel.base;
 
-        if (errors.includes(index)) {
+        if (errorSteps.includes(index)) {
             return `${baseClass} ${classNames.counterLabel.error}`;
         }
 
-        if (valids.includes(index)) {
+        if (validSteps.includes(index)) {
             return `${baseClass} ${classNames.counterLabel.valid}`;
         }
 
@@ -109,7 +111,7 @@ export default function BookingStepper({
                         className="flex items-center gap-2 cursor-pointer :focus:outline-none :focus:ring-2 :focus:ring-blue-400"
                     >
                         <div className={getCounterWrapperClass(key)}>
-                            {valids.includes(key) ? (
+                            {validSteps.includes(key) ? (
                                 <CheckIcon className="text-white h-6" />
                             ) : (
                                 <span className="text-white font-bold text-center text-xl">
@@ -128,7 +130,7 @@ export default function BookingStepper({
                 ))}
             </div>
 
-            {errors.length > 0 && (
+            {errorSteps.length > 0 && (
                 <div className="mt-4">
                     <p className="text-red-500">
                         Masih ada formulir yang kosong!

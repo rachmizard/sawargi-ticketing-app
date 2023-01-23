@@ -11,22 +11,6 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
         ziggy: { query },
     } = usePage().props;
 
-    const validateFormIdentity = (data) => {
-        if (
-            data.name === "" ||
-            data.phone === "" ||
-            data.email === "" ||
-            data.address === "" ||
-            data.passengers?.length === 0
-        ) {
-            return false;
-        }
-
-        return true;
-    };
-
-    const validateFormSeat = (data) => data.seat_ids?.length >= passengerCount;
-
     return (
         <div className="mt-8 space-y-4">
             <BookingFormProvider
@@ -35,7 +19,11 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
                     phone: defaultValues?.phone || "",
                     email: defaultValues?.email || "",
                     address: defaultValues?.address || "",
-                    passengers: [],
+                    passengers: Array.from({ length: passengerCount }).map(
+                        () => ({
+                            value: "",
+                        })
+                    ),
                     seat_ids: [],
                     schedule_id: query?.scheduleId,
                     payment_method: "",
@@ -50,7 +38,13 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
                                     passengerCount={passengerCount}
                                 />
                             ),
-                            validate: validateFormIdentity,
+                            validate: [
+                                "name",
+                                "phone",
+                                "email",
+                                "address",
+                                "passengers",
+                            ],
                         },
                         {
                             label: "Pilih Kursi",
@@ -59,7 +53,7 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
                                     passengerCount={passengerCount}
                                 />
                             ),
-                            validate: validateFormSeat,
+                            validate: ["seat_ids"],
                         },
                         {
                             label: "Pembayaran",
