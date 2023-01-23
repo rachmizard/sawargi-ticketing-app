@@ -1,47 +1,22 @@
-import { useState } from "react";
-import {
-    ArrowLeftIcon,
-    ArrowRightIcon,
-    CheckIcon,
-} from "@heroicons/react/24/outline";
-import { useFormContext } from "react-hook-form";
+import { useState, createContext, useContext, useMemo } from "react";
 
-import Button from "@/Components/Button";
+const BookingStepperContext = createContext({
+    activeIndex: 0,
+    setActiveIndex: (index) => {},
+    handleStepClick: (index) => {},
+    steps: [],
+});
+
+export const useBookingStepperContext = () => useContext(BookingStepperContext);
 
 export default function BookingStepper({
     steps = [],
     defaultActiveIndex = 0,
     onChange,
 }) {
-    const { trigger, formState } = useFormContext();
     const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
-    const [errorSteps, setErrorSteps] = useState([]);
-    const [validSteps, setValidSteps] = useState([]);
 
     const handleStepClick = async (index) => {
-        if (steps[index - 1]?.validate) {
-            const valid = await trigger(steps[index - 1]?.validate, {
-                shouldFocus: true,
-            });
-
-            if (typeof valid === "undefined") return;
-
-            if (!valid) {
-                setErrorSteps((prev) => [...prev, activeIndex]);
-
-                setValidSteps((prev) => {
-                    const valids = prev.filter((step) => step !== activeIndex);
-                    return valids;
-                });
-                return;
-            }
-        }
-
-        setValidSteps((prev) => [...prev, activeIndex]);
-        setErrorSteps((prev) => {
-            return prev.filter((step) => step !== activeIndex);
-        });
-
         setActiveIndex(index);
         onChange && onChange(index);
     };
@@ -66,13 +41,13 @@ export default function BookingStepper({
     const getCounterWrapperClass = (index) => {
         const baseClass = classNames.counterWrapper.base;
 
-        if (errorSteps.includes(index)) {
-            return `${baseClass} ${classNames.counterWrapper.error}`;
-        }
+        // if (errorSteps.includes(index)) {
+        //     return `${baseClass} ${classNames.counterWrapper.error}`;
+        // }
 
-        if (validSteps.includes(index)) {
-            return `${baseClass} ${classNames.counterWrapper.valid}`;
-        }
+        // if (validSteps.includes(index)) {
+        //     return `${baseClass} ${classNames.counterWrapper.valid}`;
+        // }
 
         if (activeIndex === index) {
             return `${baseClass} ${classNames.counterWrapper.active}`;
@@ -84,13 +59,13 @@ export default function BookingStepper({
     const getCounterLabelClass = (index) => {
         const baseClass = classNames.counterLabel.base;
 
-        if (errorSteps.includes(index)) {
-            return `${baseClass} ${classNames.counterLabel.error}`;
-        }
+        // if (errorSteps.includes(index)) {
+        //     return `${baseClass} ${classNames.counterLabel.error}`;
+        // }
 
-        if (validSteps.includes(index)) {
-            return `${baseClass} ${classNames.counterLabel.valid}`;
-        }
+        // if (validSteps.includes(index)) {
+        //     return `${baseClass} ${classNames.counterLabel.valid}`;
+        // }
 
         if (activeIndex === index) {
             return `${baseClass} ${classNames.counterLabel.active}`;
@@ -99,91 +74,54 @@ export default function BookingStepper({
         return `${baseClass} ${classNames.counterLabel.inactive}`;
     };
 
+    const value = useMemo(() => ({
+        activeIndex,
+        setActiveIndex,
+        handleStepClick,
+        steps,
+    }));
+
     return (
-        <div className="max-w-full">
-            <div className="flex flex-wrap gap-4 sm:gap-10">
-                {steps.map((step, key) => (
-                    <div
-                        key={key}
-                        onClick={() => handleStepClick(key)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                handleStepClick(key);
-                            }
-                        }}
-                        tabIndex={0}
-                        className="flex items-center gap-2 cursor-pointer :focus:outline-none :focus:ring-2 :focus:ring-blue-400"
-                    >
-                        <div className={getCounterWrapperClass(key)}>
-                            {validSteps.includes(key) ? (
+        <BookingStepperContext.Provider value={value}>
+            <div className="max-w-full">
+                <div className="flex flex-wrap gap-4 sm:gap-10">
+                    {steps.map((step, key) => (
+                        <div
+                            key={key}
+                            className="flex items-center gap-2 :focus:outline-none :focus:ring-2 :focus:ring-blue-400"
+                        >
+                            <div className={getCounterWrapperClass(key)}>
+                                {/* {validSteps.includes(key) ? (
                                 <CheckIcon className="text-white h-6" />
                             ) : (
                                 <span className="text-white font-bold text-center text-xl">
                                     {key + 1}
                                 </span>
-                            )}
+                            )} */}
+                                <span className="text-white font-bold text-center text-xl">
+                                    {key + 1}
+                                </span>
+                            </div>
+
+                            <span className={getCounterLabelClass(key)}>
+                                {step.label}
+                            </span>
                         </div>
-
-                        <span
-                            role="button"
-                            className={getCounterLabelClass(key)}
-                        >
-                            {step.label}
-                        </span>
-                    </div>
-                ))}
-            </div>
-
+                    ))}
+                </div>
+                {/* 
             {errorSteps.length > 0 && (
                 <div className="mt-4">
                     <p className="text-red-500">
                         Masih ada formulir yang kosong!
                     </p>
                 </div>
-            )}
+            )} */}
 
-            <div className="mt-8">{steps && steps[activeIndex].component}</div>
-
-            <div className="flex justify-end gap-4 mt-8">
-                <Button
-                    type="button"
-                    colorScheme="blue"
-                    disabled={activeIndex === 0}
-                    onClick={() => {
-                        activeIndex !== 0 && handleStepClick(activeIndex - 1);
-                    }}
-                    className="gap-2 font-semibold"
-                >
-                    <ArrowLeftIcon width={18} />
-                    <span>Sebelumnya</span>
-                </Button>
-
-                {activeIndex !== steps.length - 1 && (
-                    <Button
-                        type="button"
-                        colorScheme="blue"
-                        onClick={() => {
-                            activeIndex !== steps.length - 1 &&
-                                handleStepClick(activeIndex + 1);
-                        }}
-                        className="gap-2 font-semibold"
-                        disabled={!formState.isValid}
-                    >
-                        <span>Selanjutnya</span>
-                        <ArrowRightIcon width={18} />
-                    </Button>
-                )}
-
-                {activeIndex === steps.length - 1 && (
-                    <Button
-                        type="submit"
-                        colorScheme="green"
-                        className="gap-2 font-semibold"
-                    >
-                        <span>Pesan</span>
-                    </Button>
-                )}
+                <div className="mt-8">
+                    {steps && steps[activeIndex].component}
+                </div>
             </div>
-        </div>
+        </BookingStepperContext.Provider>
     );
 }

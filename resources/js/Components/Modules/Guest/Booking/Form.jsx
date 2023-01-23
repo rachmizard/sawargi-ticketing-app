@@ -1,64 +1,66 @@
-import { usePage } from "@inertiajs/inertia-react";
+import { FormProvider, useForm as useReactHookForm } from "react-hook-form";
 
 import BookingFormIdentity from "./FormIdentity";
 import BookingStepper from "./Stepper";
 import BookingFormSeat from "./FormSeat";
-import BookingFormProvider from "./BookingContext";
+import BookingFormProvider, { useBookingFormContext } from "./FormContext";
 import BookingFormPayment from "./FormPayment";
 
 export default function BookingForm({ defaultValues, passengerCount = 0 }) {
-    const {
-        ziggy: { query },
-    } = usePage().props;
-
     return (
         <div className="mt-8 space-y-4">
-            <BookingFormProvider
-                defaultValues={{
-                    name: defaultValues?.name || "",
-                    phone: defaultValues?.phone || "",
-                    email: defaultValues?.email || "",
-                    address: defaultValues?.address || "",
-                    passengers: Array.from({ length: passengerCount }).map(
-                        () => ({
-                            value: "",
-                        })
-                    ),
-                    seat_ids: [],
-                    schedule_id: query?.scheduleId,
-                    payment_method: "",
-                }}
-            >
+            <BookingFormProvider>
                 <BookingStepper
                     steps={[
                         {
                             label: "Informasi Penumpang",
                             component: (
-                                <BookingFormIdentity
-                                    passengerCount={passengerCount}
-                                />
+                                <ReactHookFormProvider
+                                    defaultValues={{
+                                        name: defaultValues?.name || "",
+                                        phone: defaultValues?.phone || "",
+                                        email: defaultValues?.email || "",
+                                        address: defaultValues?.address || "",
+                                        passengers: Array.from({
+                                            length: passengerCount,
+                                        }).map(() => ({
+                                            value: "",
+                                        })),
+                                    }}
+                                    reValidateMode="onChange"
+                                    mode="onChange"
+                                >
+                                    <BookingFormIdentity
+                                        passengerCount={passengerCount}
+                                    />
+                                </ReactHookFormProvider>
                             ),
-                            validate: [
-                                "name",
-                                "phone",
-                                "email",
-                                "address",
-                                "passengers",
-                            ],
                         },
                         {
                             label: "Pilih Kursi",
                             component: (
-                                <BookingFormSeat
-                                    passengerCount={passengerCount}
-                                />
+                                <ReactHookFormProvider
+                                    defaultValues={{
+                                        seat_ids: [],
+                                    }}
+                                >
+                                    <BookingFormSeat
+                                        passengerCount={passengerCount}
+                                    />
+                                </ReactHookFormProvider>
                             ),
-                            validate: ["seat_ids"],
                         },
                         {
                             label: "Pembayaran",
-                            component: <BookingFormPayment />,
-                            validate: ["payment_method"],
+                            component: (
+                                <ReactHookFormProvider
+                                    defaultValues={{
+                                        payment_method: "",
+                                    }}
+                                >
+                                    <BookingFormPayment />
+                                </ReactHookFormProvider>
+                            ),
                         },
                     ]}
                 />
@@ -66,3 +68,14 @@ export default function BookingForm({ defaultValues, passengerCount = 0 }) {
         </div>
     );
 }
+
+const ReactHookFormProvider = ({ children, defaultValues, ...options }) => {
+    const { data } = useBookingFormContext();
+
+    const methods = useReactHookForm({
+        defaultValues: data,
+        ...options,
+    });
+
+    return <FormProvider {...methods}>{children}</FormProvider>;
+};

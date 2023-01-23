@@ -1,13 +1,20 @@
-import { usePage } from "@inertiajs/inertia-react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import { usePage } from "@inertiajs/inertia-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+
+import Button from "@/Components/Button";
+import { useBookingFormContext } from "./FormContext";
 
 import BookingSeatCard from "./SeatCard";
+import { useBookingStepperContext } from "./Stepper";
 
 export default function BookingFormSeat({ passengerCount = 0 }) {
     const { schedule } = usePage().props;
     const { seats = [] } = schedule || {};
 
-    const { setValue, formState } = useFormContext();
+    const { trigger, setValue, formState, getValues } = useFormContext();
+    const { setData } = useBookingFormContext();
+    const { activeIndex, handleStepClick, steps } = useBookingStepperContext();
 
     useFieldArray({
         name: "seat_ids",
@@ -61,8 +68,19 @@ export default function BookingFormSeat({ passengerCount = 0 }) {
 
     const errorSeatIds = formState?.errors?.seat_ids?.root?.message;
 
+    const submit = async (e, values) => {
+        e.preventDefault();
+
+        const valid = await trigger(["seat_ids"]);
+        if (!valid) return;
+
+        setData(values);
+
+        activeIndex !== steps.length - 1 && handleStepClick(activeIndex + 1);
+    };
+
     return (
-        <div className="">
+        <form onSubmit={(e) => submit(e, getValues())}>
             <div className="max-w-full sm:max-w-xl mx-auto">
                 <h1 className="text-2xl text-gray-500 text-center font-semibold leading-loose tracking-tighter">
                     Indikator Warna
@@ -108,6 +126,32 @@ export default function BookingFormSeat({ passengerCount = 0 }) {
                     })}
                 </div>
             </div>
-        </div>
+
+            <div className="flex justify-end gap-4 mt-8">
+                <Button
+                    type="button"
+                    colorScheme="blue"
+                    onClick={() => {
+                        activeIndex !== steps.length - 1 &&
+                            handleStepClick(activeIndex - 1);
+                    }}
+                    className="gap-2 font-semibold"
+                >
+                    <ArrowLeftIcon width={18} />
+                    <span>Sebelumnya</span>
+                </Button>
+
+                {activeIndex !== steps.length - 1 && (
+                    <Button
+                        type="submit"
+                        colorScheme="blue"
+                        className="gap-2 font-semibold"
+                    >
+                        <span>Selanjutnya</span>
+                        <ArrowRightIcon width={18} />
+                    </Button>
+                )}
+            </div>
+        </form>
     );
 }
