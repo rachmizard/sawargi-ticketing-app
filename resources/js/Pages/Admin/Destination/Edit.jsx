@@ -9,7 +9,6 @@ import Authenticated from "@/Layouts/Authenticated";
 export default function DestinationCreatePage(props) {
     const { auth, destination, flash } = props;
 
-    console.log(flash);
     const { errors, data, processing, reset, setData, put } = useForm(
         "EditDestinationForm",
         {

@@ -23,8 +23,6 @@ export default function ShuttleEditPage(props) {
             status: shuttle.status?.toLowerCase(),
         });
 
-    console.log("data", data);
-
     const handleSubmit = (e) => {
         e.preventDefault();
 

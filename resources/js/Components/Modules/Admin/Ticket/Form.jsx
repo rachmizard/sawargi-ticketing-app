@@ -69,7 +69,6 @@ export default function TicketForm({
                         value={data.from_destination_id}
                         className="w-full"
                         onChange={(value, rest) => {
-                            console.log(rest);
                             setDepartCity(rest.city_type);
                             setData("from_destination_id", value);
                         }}
