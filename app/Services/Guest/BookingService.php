@@ -96,7 +96,10 @@ class BookingService implements BookingRepository
     {
         return $this->model::with(
             'bookingSeats.seat',
-            'bookingPayments'
+            'bookingPayments',
+            'schedule.destination.fromOutlet',
+            'schedule.destination.toOutlet',
+            'schedule.shuttle',
         )
             ->whereId($id)
             ->pending()

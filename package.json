@@ -34,6 +34,7 @@
         "@heroicons/react": "^2.0.13",
         "date-fns": "^2.29.3",
         "react-datepicker": "^4.8.0",
+        "react-hook-form": "^7.42.1",
         "react-select": "^5.7.0"
     }
 }
