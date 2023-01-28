@@ -24,6 +24,8 @@ Route::middleware(['role:user'])->group(function () {
 
     Route::prefix('/booking')->group(function () {
         Route::get('/{bookingId}/payment', [BookingController::class, 'payment'])->name('booking.payment');
+        Route::post('/{bookingId}/pay', [BookingController::class, 'payBooking'])->name('booking.pay');
+        Route::put('/{bookingId}/expired', [BookingController::class, 'setExpired'])->name('booking.expired');
     });
 
     Route::resource('/booking', BookingController::class)->names([

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Guest\Booking\StoreBookingRequest;
+use App\Http\Requests\Guest\Booking\StorePayBookingRequest;
 use App\Services\Guest\BookingService;
 use App\Services\Guest\ScheduleService;
 
@@ -52,5 +53,21 @@ class BookingController extends Controller
         return Inertia::render('Guest/Booking/Payment', [
             'booking' => $booking->toArray(),
         ]);
+    }
+
+    public function payBooking(int $id, StorePayBookingRequest $request, BookingService $booking)
+    {
+        $booking = $booking->payBookingById($id, $request);
+
+        if (!$booking) {
+            return Redirect::route('welcome')->with('error', 'Pemesanan tidak ditemukan atau sudah dibayar atau mungkin gagal.');
+        }
+
+        return Redirect::route('booking.payment', $booking->id)->with('success', 'Pembayaran berhasil, silahkan tunggu konfirmasi dari admin.');
+    }
+
+    public function setExpired(int $id, BookingService $booking)
+    {
+        $booking->setExpiredById($id);
     }
 }

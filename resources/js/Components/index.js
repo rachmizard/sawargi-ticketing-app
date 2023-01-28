@@ -12,6 +12,7 @@ export { default as Label } from "./Label";
 export { default as Modal } from "./Modal";
 export { default as NavLink } from "./NavLink";
 export { default as Pagination } from "./Pagination";
+export { default as Progressbar } from "./Progressbar";
 export { default as ResponsiveNavLink } from "./ResponsiveNavLink";
 export { default as Select } from "./Select";
 export { default as ValidationErrors } from "./ValidationErrors";

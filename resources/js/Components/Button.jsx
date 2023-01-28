@@ -17,6 +17,7 @@ export default function Button({
             gray: "text-gray-500 border border-gray-500 hover:bg-gray-500 hover:text-white",
             black: "text-black border border-black hover:bg-black hover:text-white",
             purple: "text-purple-500 border border-purple-500 hover:bg-purple-500 hover:text-white",
+            yellow: "text-yellow-500 border border-yellow-500 hover:bg-yellow-500 hover:text-white",
         },
         solid: {
             blue: "text-white bg-blue-500 hover:bg-blue-600",
@@ -25,6 +26,7 @@ export default function Button({
             gray: "text-white bg-gray-500 hover:bg-gray-600",
             black: "text-white bg-black hover:bg-gray-900",
             purple: "text-white bg-purple-500 hover:bg-purple-600",
+            yellow: "text-white bg-yellow-500 hover:bg-yellow-600",
         },
     }[variant];
 
