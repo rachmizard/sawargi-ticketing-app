@@ -254,6 +254,7 @@ export default function BookingPaymentPage({ auth, booking }) {
                         }
                         booking={booking}
                         bookingPayment={bookingPayment}
+                        userHasTransferredProof={userHasTransferredProof}
                     />
 
                     <FormUploadTransferProof
@@ -433,10 +434,11 @@ function FormUploadTransferProof({
                 isOpen={wasSuccessful || userHasTransferredProof}
                 infinite={wasSuccessful || userHasTransferredProof}
                 variant="success"
-                title="Pembayaran Berhasil"
+                title="Pembayaran diproses"
             >
                 <p>
-                    Pembayaran berhasil, silahkan tunggu konfirmasi dari admin.
+                    Pembayaran anda akan diproses, silahkan tunggu konfirmasi
+                    dari admin.
                 </p>
                 <p>
                     Terima kasih telah menggunakan layanan kami Sawargi Ticket

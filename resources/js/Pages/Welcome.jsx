@@ -43,6 +43,7 @@ export default function Welcome(props) {
                     <ScheduleResult
                         onBooking={onBooking}
                         schedules={schedules}
+                        passenger={parseInt(query.passenger)}
                     />
                 )}
                 {!isSearching && <ScheduleEmpty />}

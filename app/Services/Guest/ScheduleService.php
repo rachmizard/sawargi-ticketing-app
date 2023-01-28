@@ -48,6 +48,7 @@ class ScheduleService implements ScheduleRepository
             ])
             ->orderBy('departure_date', 'ASC');
 
+
         if ($request->has('destination_id')) {
             $schedules->where('destination_id', $request->destination_id);
         }
@@ -69,7 +70,12 @@ class ScheduleService implements ScheduleRepository
             }
         }
 
-        if ($request->has('destination_id') && $request->has('departure_date')) {
+
+        if ($request->has('destination_id') && $request->has('departure_date') && $request->has('passenger')) {
+
+            // optional
+            // $schedules->having('available_seats', '>=', $request->passenger);
+
             return $schedules->get()->toArray();
         }
 

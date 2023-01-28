@@ -36,7 +36,7 @@ export default function ScheduleFilterForm({ queries, onFilter }) {
     const [fields, setFields] = useState({
         selectedDate: new Date(),
         destinationId: parseInt(destination_id) ?? null,
-        passenger: queries?.passenger ?? 1,
+        passenger: queries?.passenger ?? 0,
     });
 
     const destinationOptions = destinations.map((destination) => ({
@@ -142,13 +142,15 @@ export default function ScheduleFilterForm({ queries, onFilter }) {
                             <Select
                                 placeholder="Jumlah penumpang"
                                 className="w-full"
-                                emptyOption
                                 value={fields.passenger}
-                                emptyOptionLabel="Pilih jumlah penumpang"
                                 onChange={(value) => {
                                     handleChange("passenger", value);
                                 }}
                                 options={[
+                                    {
+                                        value: 0,
+                                        label: "Pilih jumlah penumpang",
+                                    },
                                     { value: 1, label: "1" },
                                     { value: 2, label: "2" },
                                     { value: 3, label: "3" },
