@@ -5,7 +5,7 @@ namespace App\Services\Admin;
 use App\Http\Requests\Admin\Booking\UpdateBookingPaymentRequest;
 use App\Models\Booking;
 use App\Repositories\Admin\BookingRepository;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -83,17 +83,25 @@ class BookingService implements BookingRepository
 
             $booking = $this->query()->findOrFail($id);
 
-            $booking->bookingPayments()
-                ->pending()
-                ->transferProofUrl()
-                ->update([
-                    'status' => $payload['payment_status'],
-                ]);
 
-            $booking->bookingSeats()->update([
-                'is_paid' => $payload['payment_status'] === 'success' ? true : false,
-                'is_cancelled' => $payload['payment_status'] === 'failed' ? true : false,
-            ]);
+            if ($payload['method'] === 'transfer') {
+                $booking->bookingPayments()
+                    ->pending()
+                    ->transferProofUrl()
+                    ->update([
+                        'status' => $payload['payment_status'],
+                    ]);
+            }
+
+            if ($payload['method'] === 'cash') {
+                $booking->bookingPayments()
+                    ->pending()
+                    ->update([
+                        'status' => $payload['payment_status'],
+                        'paid_at' => Carbon::now(),
+                    ]);
+            }
+
 
             if ($payload['payment_status'] === 'failed') {
                 $booking->schedule->seats()
@@ -103,6 +111,12 @@ class BookingService implements BookingRepository
                         'status' => 'vacant'
                     ]);
             }
+
+
+            $booking->bookingSeats()->update([
+                'is_paid' => $payload['payment_status'] === 'success' ? true : false,
+                'is_cancelled' => $payload['payment_status'] === 'failed' ? true : false,
+            ]);
 
             $booking->update([
                 'status' => $payload['status'],
