@@ -25,6 +25,7 @@ class UpdateBookingPaymentRequest extends FormRequest
     {
         return [
             'booking_id' => 'required|exists:bookings,id',
+            'method' => 'required|in:cash,transfer',
             'status' => 'required|in:complete,cancelled',
             'payment_status' => 'required|in:success,failed',
         ];

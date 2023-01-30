@@ -1,4 +1,6 @@
 export {
+    BookingConfirmPaymentModal,
+    BookingFilterSection,
     DestinationForm,
     OutletFilterSection,
     OutletForm,

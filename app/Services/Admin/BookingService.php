@@ -57,11 +57,46 @@ class BookingService implements BookingRepository
                 DB::raw('count(booking_seats.id) as passenger_count'),
 
 
-            )
-            ->whereHas('bookingPayments', function ($query) {
+            );
+
+
+        if ($request->has('status')) {
+            $query->whereHas('bookingPayments', function ($query) use ($request) {
+                $arrayStatusPayment = [];
+
+                if (in_array('pending', $request->status)) {
+                    $arrayStatusPayment[] = 'pending';
+                }
+
+                if (in_array('complete', $request->status)) {
+                    $arrayStatusPayment[] = 'success';
+                }
+
+                if (in_array('cancelled', $request->status)) {
+                    $arrayStatusPayment[] = 'failed';
+                }
+
+                $query->whereIn('status', $arrayStatusPayment);
+            });
+
+            $query->whereIn('bookings.status', $request->status);
+        } else {
+            $query->orWhereHas('bookingPayments', function ($query) {
                 $query->pending();
-                $query->transferProofUrl();
-            })
+            });
+        }
+
+        if ($request->has('customer_name')) {
+            $query->orWhere('bookings.name', 'LIKE', '%' . $request->customer_name . '%');
+        }
+
+        if ($request->has('payment_method')) {
+            $query->whereHas('bookingPayments', function ($query) use ($request) {
+                $query->where('method', $request->payment_method);
+            });
+        }
+
+        $query
             ->groupBy('bookings.id')
             ->orderBy('bookings.created_at', 'desc');
 
