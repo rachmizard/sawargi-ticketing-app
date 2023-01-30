@@ -7,7 +7,6 @@ use App\Http\Requests\Admin\Destination\StoreDestinationRequest;
 use App\Http\Requests\Admin\Destination\UpdateDestinationRequest;
 
 use App\Models\Outlet;
-use App\Models\Shuttle;
 use App\Services\Admin\DestinationService;
 
 use Illuminate\Http\Request;

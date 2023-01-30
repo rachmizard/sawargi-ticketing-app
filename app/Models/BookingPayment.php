@@ -47,4 +47,14 @@ class BookingPayment extends Model
     {
         return $query->where('method', 'transfer');
     }
+
+    public function scopeTransferProofUrl($query)
+    {
+        return $query->where('transfer_proof_url', '!=', null);
+    }
+
+    public function getTransferProofUrlAttribute($value)
+    {
+        return $value ? asset('storage/' . $value) : null;
+    }
 }

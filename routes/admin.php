@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\OutletController;
 use App\Http\Controllers\Admin\ScheduleController;
@@ -63,5 +63,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->as("admin.")->group(funct
         'edit' => 'schedules.edit',
         'update' => 'schedules.update',
         'destroy' => 'schedules.destroy',
+    ]);
+
+    Route::resource('bookings', BookingController::class)->names([
+        'index' => 'bookings',
+        'create' => 'bookings.create',
+        'store' => 'bookings.store',
+        'show' => 'bookings.show',
+        'edit' => 'bookings.edit',
+        'update' => 'bookings.update',
+        'destroy' => 'bookings.destroy',
     ]);
 });

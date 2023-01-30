@@ -1,18 +1,22 @@
 /* eslint-disable no-undef */
 import { useState } from "react";
-import ApplicationLogo from "@/Components/ApplicationLogo";
-import Dropdown from "@/Components/Dropdown";
-import NavLink from "@/Components/NavLink";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
-import { Link } from "@inertiajs/inertia-react";
-import { ArrowBack } from "@/Components/Icons";
+
 import {
     ArrowTrendingUpIcon,
     BuildingStorefrontIcon,
     CalendarDaysIcon,
     Squares2X2Icon,
+    TicketIcon,
     TruckIcon,
 } from "@heroicons/react/24/outline";
+import { Link } from "@inertiajs/inertia-react";
+
+import { ArrowBack } from "@/Components/Icons";
+
+import ApplicationLogo from "@/Components/ApplicationLogo";
+import Dropdown from "@/Components/Dropdown";
+import NavLink from "@/Components/NavLink";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 
 export default function Authenticated({ auth, backUrl, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -72,9 +76,6 @@ export default function Authenticated({ auth, backUrl, header, children }) {
                                     Shuttle
                                 </NavLink>
 
-                                {/**
-                                 * TODO: Refactor to schedule
-                                 */}
                                 <NavLink
                                     href={route("admin.schedules")}
                                     icon={<CalendarDaysIcon width={18} />}
@@ -86,6 +87,17 @@ export default function Authenticated({ auth, backUrl, header, children }) {
                                     }
                                 >
                                     Schedules
+                                </NavLink>
+
+                                <NavLink
+                                    href={route("admin.bookings")}
+                                    icon={<TicketIcon width={18} />}
+                                    active={
+                                        route().current("admin.bookings") ||
+                                        route().current("admin.bookings.create")
+                                    }
+                                >
+                                    Booking
                                 </NavLink>
                             </div>
                         </div>

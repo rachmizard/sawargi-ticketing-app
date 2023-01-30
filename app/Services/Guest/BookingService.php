@@ -135,7 +135,7 @@ class BookingService implements BookingRepository
                 return null;
             }
 
-            $fileStored = $request->file('transfer_proof')->store('transfer_proof');
+            $fileStored = $request->file('transfer_proof')->store('transfer_proof', 'public');
 
             $booking->bookingPayments()->update([
                 'transfer_proof_url' => $fileStored,
@@ -149,7 +149,7 @@ class BookingService implements BookingRepository
             DB::rollBack();
 
             // remove transfer proof file
-            if ($request->hasFile('transfer_proof')) {
+            if ($request->hasFile('/public/transfer_proof')) {
                 $request->file($fileStored)->delete();
             }
 
@@ -157,6 +157,11 @@ class BookingService implements BookingRepository
         }
     }
 
+    /**
+     * Set booking expired by id.
+     * @param  int  $id
+     * @return object $booking
+     */
     public function setExpiredById($id)
     {
         try {

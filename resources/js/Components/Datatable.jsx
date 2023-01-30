@@ -13,7 +13,7 @@ export default function Datatable({
     const showPerPageOptions = [5, 10, 20, 50, 100];
 
     return (
-        <div className="p-6 bg-white border-b border-gray-200">
+        <div className="p-6 bg-white border-b border-gray-200 overflow-x-scroll">
             <table className="table-auto text-sm w-full">
                 <thead>
                     <tr>
