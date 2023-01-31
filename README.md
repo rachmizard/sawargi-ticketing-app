@@ -1,6 +1,6 @@
 ## Prerequisites
 
-1. Your PC mus be install GIT **_(Required)_**
+1. Your PC must be install GIT **_(Required)_**
 2. Your PC must be installed `PHP` with **8.1.13** version or greater **_(Required)_**
 3. Your PC must be installed `NodeJS` with latest version **_(Required)_**
 4. Your PC should optionally installed **Yarn package manager** with latest version **_(Optional)_**
