@@ -15,9 +15,8 @@ class CreateUserTicketsTable extends Migration
     {
         Schema::create('user_tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("user_id")->constrained("users", 'id')->onDelete("cascade");
-            $table->foreignId("ticket_id")->constrained("tickets", 'id')->onDelete("cascade");
-            $table->foreignId("invoice_id")->nullable()->constrained("invoices", "id")->nullOnDelete();
+            $table->foreignId("user_id")->constrained("users", 'id');
+            $table->foreignId("ticket_id")->constrained("tickets", 'id');
             $table->enum('status', ['pending', 'waiting', 'paid', 'cancelled']);
             $table->timestamps();
         });
