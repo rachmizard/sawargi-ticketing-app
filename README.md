@@ -14,12 +14,13 @@
 
 1. Create your database using mysql named `sawargi_ticket_db`
 2. Next, edit `.env` file in your root project application, for full example which following :
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=sawargi_ticket_db
-   DB_USERNAME="your DB username here"
-   DB_PASSWORD="your DB password here"
+
+    > DB_CONNECTION=mysql
+    > DB_HOST=127.0.0.1
+    > DB_PORT=3306
+    > DB_DATABASE=sawargi_ticket_db
+    > DB_USERNAME="your DB username here"
+    > DB_PASSWORD="your DB password here"
 
 3. Once done, type `php artisan migrate` or `php artisan migrate:refresh` to migrate the tables
 4. Next, type in your terminal `php artisan db:seed` to inject sample master data
